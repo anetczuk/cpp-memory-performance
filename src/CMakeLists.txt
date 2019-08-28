@@ -91,7 +91,7 @@ macro(current_dir_name output_var)
 endmacro()
 
 
-macro(add_subdirectories_recursive)
+function(add_subdirectories_recursive)
     ## returns files in alphabetic order
     set( subdirs_list )
     file(GLOB_RECURSE cmake_files */CMakeLists.txt )
@@ -117,10 +117,10 @@ macro(add_subdirectories_recursive)
     foreach(item ${subdirs_list})
         add_subdirectory( ${item} )
     endforeach()
-endmacro()
+endfunction()
 
 
-macro(build_cpps project_name)
+function(build_cpps project_name)
     file(GLOB cpp_files *.cpp)
     
     foreach(single_cpp ${cpp_files})
@@ -133,12 +133,17 @@ macro(build_cpps project_name)
         target_link_libraries( ${TARGET_NAME} ${EXT_LIBS} )
         set_target_properties( ${TARGET_NAME} PROPERTIES OUTPUT_NAME ${cpp_name})
     endforeach()
-endmacro()
+endfunction()
 
 
-macro(build_tests project_name)
-    if( CMAKE_TESTING_ENABLED )
-        set( single_cpp tests.cpp)
+function(build_tests project_name)
+    if( NOT CMAKE_TESTING_ENABLED )
+        return()
+    endif()
+    
+    file(GLOB cpp_files test_*.cpp)
+    
+    foreach(single_cpp ${cpp_files})
         get_filename_component( cpp_name ${single_cpp} NAME_WE)
         set( TARGET_NAME ${project_name}-${cpp_name} )
         add_executable( ${TARGET_NAME} ${single_cpp} )
@@ -148,8 +153,8 @@ macro(build_tests project_name)
             NAME ${TARGET_NAME} 
             COMMAND ${cpp_name}
         )
-    endif()
-endmacro()
+    endforeach()
+endfunction()
 
 
 ## ================= build =================
