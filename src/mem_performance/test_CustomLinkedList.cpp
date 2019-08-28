@@ -2,65 +2,61 @@
 //
 //
 
-#include <iostream>
+#include "gtest/gtest.h"
 
 #include "CustomLinkedList.h"
-#include "testutils.h"
 
 
+TEST(CustomLinkedList, listMemSize) {
+    CustomLinkedList listA;
+    listA.randomize();
+    EXPECT_EQ(40, listA.memSize());
 
-int main() {
-    int failures = 0;
+    CustomLinkedList listB(1);
+    listB.randomize();
+    EXPECT_EQ(2032, listB.memSize());
+}
 
-    {
-        CustomLinkedList list(1);
-        list.randomize();
-        if (list.head->next != nullptr) {
-            ++failures;
-            std::cout << __LINE__ << ": test failed" << std::endl;
-        }
-    }
-    {
-        CustomLinkedList list(2);
-        list.randomize();
-        if (list.head->next == nullptr) {
-            ++failures;
-            std::cout << __LINE__ << ": test failed" << std::endl;
-        }
-    }
-    {
-        // test list null item
-        CustomLinkedList list(1000);
-        list.randomize();
-        std::size_t items = 0;
-        CustomItem* item = list.head;
-        while(item != nullptr) {
-            item = item->next;
-            ++items;
-        }
-        if (items != list.size()) {
-            ++failures;
-            std::cout << __LINE__ << ": test failed" << std::endl;
-        }
-    }
-    {
-        // test list randomized
-        CustomLinkedList list(1000);
-        list.randomize();
-        std::size_t same = 0;
-        CustomItem* item = list.head;
-        for(std::size_t i=0; i<list.size(); ++i) {
-            if ( item == &(list.content[i]) ) ++same;
-            item = item->next;
-        }
-        if (same == list.size()) {
-            ++failures;
-            std::cout << __LINE__ << ": test failed" << std::endl;
-        }
-    }
+TEST(CustomLinkedList, properHead) {
+    CustomLinkedList listA;
+    listA.randomize();
+    EXPECT_EQ(nullptr, listA.head);
 
-    if (failures == 0) {
-        std::cout << "OK" << std::endl;
+    CustomLinkedList listB(1);
+    listB.randomize();
+    EXPECT_NE(nullptr, listB.head);
+}
+
+TEST(CustomLinkedList, properNext001) {
+    CustomLinkedList listA(1);
+    listA.randomize();
+    EXPECT_EQ(nullptr, listA.head->next);
+
+    CustomLinkedList listB(2);
+    listB.randomize();
+    EXPECT_NE(nullptr, listB.head->next);
+}
+
+TEST(CustomLinkedList, properNext002) {
+    CustomLinkedList list(1000);
+    list.randomize();
+    std::size_t items = 0;
+    CustomItem* item = list.head;
+    while(item != nullptr) {
+        item = item->next;
+        ++items;
     }
-    return std::min( failures, 127 );
+    EXPECT_EQ(list.size(), items);
+}
+
+TEST(CustomLinkedList, properNext003) {
+    CustomLinkedList list(1000);
+    list.randomize();
+    std::size_t same = 0;
+    CustomItem* item = list.head;
+    for(std::size_t i=0; i<list.size(); ++i) {
+        if ( item == &(list.content[i]) ) ++same;
+        item = item->next;
+    }
+    EXPECT_NE(list.size(), same);
 }

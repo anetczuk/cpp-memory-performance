@@ -21,7 +21,7 @@ struct CustomLinkedList {
     std::vector<CustomItem> content;
     CustomItem* head;
 
-    CustomLinkedList(const std::size_t count): content(count), head(nullptr) {
+    CustomLinkedList(const std::size_t count = 0): content(count), head(nullptr) {
     }
 
     virtual ~CustomLinkedList() {

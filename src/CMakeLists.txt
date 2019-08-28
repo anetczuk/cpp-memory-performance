@@ -136,7 +136,7 @@ function(build_cpps project_name)
 endfunction()
 
 
-function(build_tests project_name)
+function(build_tests project_name ext_libs)
     if( NOT CMAKE_TESTING_ENABLED )
         return()
     endif()
@@ -147,7 +147,8 @@ function(build_tests project_name)
         get_filename_component( cpp_name ${single_cpp} NAME_WE)
         set( TARGET_NAME ${project_name}-${cpp_name} )
         add_executable( ${TARGET_NAME} ${single_cpp} )
-        target_link_libraries( ${TARGET_NAME} ${EXT_LIBS} )
+        #add_dependencies( ${TARGET_NAME} gtest )
+        target_link_libraries( ${TARGET_NAME} ${ext_libs} )
         set_target_properties( ${TARGET_NAME} PROPERTIES OUTPUT_NAME ${cpp_name})
         add_test(
             NAME ${TARGET_NAME} 
@@ -160,9 +161,38 @@ endfunction()
 ## ================= build =================
 
 
+include(ExternalProject)
+
+
 include_directories( . )
 
 if( CMAKE_TESTING_ENABLED )
+    ##
+    ## Google Test advises to build it inside project's cmake list to have the same compiler flags.
+    ##
+    ExternalProject_Add( googletest
+                         SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../libs/googletest-release-1.8.1/googletest
+                         PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
+                         INSTALL_COMMAND "" 
+                         )
+                         
+    #ExternalProject_Get_Property(googletest source_dir binary_dir)
+    #set( gtest_source_dir ${source_dir} )
+    #include_directories(${gtest_source_dir}/include)
+                         
+    ExternalProject_Get_Property(googletest binary_dir)
+    set( gtest_binary_dir ${binary_dir} )
+    
+    add_library(gtest UNKNOWN IMPORTED)
+    set_target_properties( gtest PROPERTIES IMPORTED_LOCATION ${gtest_binary_dir}/libgtest.a )
+    add_dependencies(gtest googletest)
+    
+    add_library(gtest_main UNKNOWN IMPORTED)
+    set_target_properties( gtest_main PROPERTIES IMPORTED_LOCATION ${gtest_binary_dir}/libgtest_main.a )
+    add_dependencies(gtest_main googletest)
+    
+    set( GTEST_LIBRARIES gtest gtest_main pthread )
+    
     include_directories( test_utils )
 endif()
 

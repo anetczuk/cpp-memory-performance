@@ -19,4 +19,4 @@ file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_config.gnu DESTINATION ${CMAKE_CURRE
 
 
 ## tests
-build_tests( ${CURR_DIR_NAME} )
+build_tests( ${CURR_DIR_NAME} "${GTEST_LIBRARIES}" )
