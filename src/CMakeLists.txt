@@ -1,6 +1,6 @@
-#
-#
-#
+##
+##
+##
 
 cmake_minimum_required(VERSION 3.0.2)
 
@@ -10,7 +10,7 @@ if( "${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}" )
 endif()
 
 
-project( optimization-exercises )
+project( memory-performance )
 
 
 if( NOT CMAKE_BUILD_TYPE )
@@ -23,24 +23,39 @@ if (CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
 endif()
 
 
+##
 ## set default compilation standard
+##
 if (CMAKE_VERSION VERSION_LESS "3.1")
     ## handled by gcc and clang
     set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99" )
+    set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11" )
 else()
     ## supported by CMake 3.1 and above
     set( CMAKE_C_STANDARD 99 )
     set( CMAKE_C_STANDARD_REQUIRED ON )
+    set( CMAKE_CXX_STANDARD 11 )
+    set( CMAKE_CXX_STANDARD_REQUIRED ON )
 endif()
 
+
+##
 ## compiler flags, gcc does not handle "appended" values
+##
 set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall" )
 set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pedantic" )
 set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wextra" )
 #set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wno-long-long" )
 
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall" )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pedantic" )
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wextra" )
+#set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-long-long" )
 
+
+##
 ## option for code coverage
+##
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
     option(CODE_COVERAGE "Code coverage (for GCC)" OFF )
     if ( CODE_COVERAGE )
@@ -62,7 +77,9 @@ else()
 endif()
 
 
+##
 ## option for clang sanitizers
+##
 if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
     ## other sanitizers (memory, leak) does not work properly on clang 3.5
     option( ADDRESS_SANITIZER "Address sanitizer (for clang)" OFF )
@@ -72,7 +89,9 @@ if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
 endif()
 
 
+##
 ## enable CTest utility
+##
 enable_testing()
 
 
