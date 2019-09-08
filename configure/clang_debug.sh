@@ -24,4 +24,4 @@ cd $BUILD_DIR
 export CC=/usr/bin/clang
 export CXX=/usr/bin/clang++
 
-cmake --config $BUILD_TYPE $SRC_DIR
+cmake -D CMAKE_BUILD_TYPE=$BUILD_TYPE $SRC_DIR
