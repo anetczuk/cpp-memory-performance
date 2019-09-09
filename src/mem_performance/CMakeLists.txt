@@ -14,8 +14,18 @@ build_cpps( ${CURR_DIR_NAME} )
 
 
 ## copy plot script
-file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
+file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_all.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
 file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_config.gnu DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
+
+
+function(generate_benchmark_script data_type)
+    set( GENERATOR_FILE "${CMAKE_CURRENT_SOURCE_DIR}/plot_single.sh.in" )
+    set( DATA_TYPE ${data_type} )
+    configure_file( ${GENERATOR_FILE} "plot_${data_type}.sh" @ONLY )
+endfunction()
+
+generate_benchmark_script( vector )
+generate_benchmark_script( array )
 
 
 ## tests
