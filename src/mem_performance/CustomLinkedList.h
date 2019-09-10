@@ -9,8 +9,11 @@
 #include <algorithm>
 
 
+typedef uint64_t ListPayload[248];
+
+
 struct CustomItem {
-    uint64_t data[248];             // occupy memory
+	ListPayload data;					// occupy memory
     CustomItem* next = nullptr;
 };
 
@@ -18,13 +21,19 @@ static const std::size_t CUSTOM_ITEM_SIZE = sizeof(CustomItem);
 
 
 struct CustomLinkedList {
-    std::vector<CustomItem> content;
-    CustomItem* head;
+	typedef CustomItem value_type;
+
+    std::vector<value_type> content;
+    value_type* head;
 
     CustomLinkedList(const std::size_t count = 0): content(count), head(nullptr) {
     }
 
     virtual ~CustomLinkedList() {
+    }
+
+    const value_type* data() const {
+    	return head;
     }
 
     void setInOrder() {
@@ -44,7 +53,7 @@ struct CustomLinkedList {
         const std::size_t count = content.size();
         if (count < 1)
             return ;
-        std::vector<CustomItem*> list( count );
+        std::vector<value_type*> list( count );
         for(std::size_t i=0; i<count; ++i) {
             list[i] = &content[i];
         }

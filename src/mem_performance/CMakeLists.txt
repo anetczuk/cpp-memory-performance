@@ -26,6 +26,8 @@ endfunction()
 
 generate_benchmark_script( vector )
 generate_benchmark_script( array )
+generate_benchmark_script( cllist )
+generate_benchmark_script( cllist_small )
 
 
 ## tests

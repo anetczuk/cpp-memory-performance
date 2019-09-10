@@ -21,43 +21,40 @@
 /// SOFTWARE.
 ///
 
-#ifndef MEM_PERFORMANCE_BENCH_ARRAY_H_
-#define MEM_PERFORMANCE_BENCH_ARRAY_H_
-
-#include <iostream>
+#ifndef MEM_PERFORMANCE_BENCH_LIST_H_
+#define MEM_PERFORMANCE_BENCH_LIST_H_
 
 #include "benchmark/benchmark.h"
 #include "benchmark/benchmark_log.h"
 #include "benchmark/benchmark_time.h"
 
-#include "array.h"
-
 
 template <typename BType>
 inline uint64_t bench_iteration(const typename BType::value_type* list, const std::size_t listSize, const std::size_t itersnum) {
 	benchmark::Clock::TimePoint startTime, endTime;
-	typename BType::value_type sum = 0;
 	startTime = benchmark::Clock::Now();
 
 	for(std::size_t i = 0; i<itersnum; ++i) {
-		std::size_t x = 0;
-		for(; x<listSize; ++x) {
-			sum += list[x];
+		const typename BType::value_type* elem = list;
+		uint64_t sum = 0;
+		while( elem != nullptr && sum < listSize ) {
+			elem = elem->next;
+			++sum;
+		}
+		if ( sum != listSize )  {
+			std::cerr << "internal error: " << sum << " " << listSize << std::endl;
+			exit(1);
 		}
 	}
 
 	endTime = benchmark::Clock::Now();
-	if ( sum != listSize*itersnum )  {
-		std::cerr << "internal error" << std::endl;
-		exit(1);
-	}
 	const uint64_t duration = benchmark::Clock::Duration(startTime, endTime);
 	return duration;
 }
 
 
 template <typename BType>
-class VectorExperiment: public benchmark::ContainerExperiment {
+class ListExperiment: public benchmark::ContainerExperiment {
 public:
 
 	benchmark::LogExperimentFunctor logFunctor;
@@ -65,15 +62,14 @@ public:
 	std::size_t avgProbesMin;
 	std::size_t prevMemSize;
 	std::size_t expsNumber;
-	BType container;
 
 	std::size_t DATA_SIZE;
 	std::size_t CONTAINER_SIZE;
 
 
-	VectorExperiment(): benchmark::ContainerExperiment(),
+	ListExperiment(): benchmark::ContainerExperiment(),
 			logFunctor(), avgProbesFactor(0.0), avgProbesMin(1),
-			prevMemSize(0), expsNumber(0), container(),
+			prevMemSize(0), expsNumber(0),
 			DATA_SIZE( sizeof(typename BType::value_type) ), CONTAINER_SIZE( sizeof(BType) )
 	{
 		logFunctor.maxSizeB = (1024 + 256)*1024*1024L;
@@ -85,16 +81,14 @@ public:
 		avgProbesFactor = 50;
 		avgProbesMin = 5;
 
-		expsNumber = logFunctor.experimentsNumber();
-
-		//TODO: adding memory declaration here helps timing
-
-		std::cerr << "initializing memory" << std::endl;
-		const std::size_t listSize = calcContainerSize( logFunctor.maxSizeB );
-		container = BType( listSize, 1 );
+		initialize();
 	}
 
-	virtual ~VectorExperiment() {
+	virtual ~ListExperiment() {
+	}
+
+	void initialize() {
+		expsNumber = logFunctor.experimentsNumber();
 	}
 
 	void run() {
@@ -111,9 +105,12 @@ public:
         }
         prevMemSize = memSizeB;
 
-	    const std::size_t listSize = calcContainerSize( memSizeB );
+        const std::size_t listSize = calcContainerSize( memSizeB );
 	    if (listSize < 8)
 	        return benchmark::BenchResult();
+
+	    BType dataContainer = BType( listSize );
+	    dataContainer.randomize();
 
         const std::size_t itersnum = logFunctor.calcItersNumber(experimentNo);
 
@@ -121,7 +118,7 @@ public:
 	    const std::size_t avgProbes = avgFactor * avgProbesFactor + avgProbesMin;
 	    uint64_t minVal = -1;
 
-	    const typename BType::value_type* list = container.data();
+	    const typename BType::value_type* list = dataContainer.data();
 
 	    for(std::size_t x = 0; x<avgProbes; ++x) {
 	    	const uint64_t duration = bench_iteration<BType>(list, listSize, itersnum);
@@ -138,4 +135,4 @@ public:
 };
 
 
-#endif /* MEM_PERFORMANCE_BENCH_ARRAY_H_ */
+#endif /* MEM_PERFORMANCE_BENCH_LIST_H_ */
