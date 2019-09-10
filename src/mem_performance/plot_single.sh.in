@@ -12,13 +12,24 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 cd $SCRIPT_DIR
 
+run_benchmark=1
+while test $# != 0; do
+    case "$1" in
+	    --no-benchmark|-nb) run_benchmark=0 ;;
+	    *)  ;;
+    esac
+    shift
+done
+
 
 benchmark_exec=./benchmark_@DATA_TYPE@
 raw_data_file=raw_data_@DATA_TYPE@.txt
 plot_data_file=plot_data_@DATA_TYPE@.txt
 
-echo "Generating data"
-$benchmark_exec > $raw_data_file
+if [ $run_benchmark -ne 0 ]; then
+	echo "Generating data"
+	$benchmark_exec > $raw_data_file
+fi
 
 
 echo "Extracting data"
@@ -28,6 +39,6 @@ awk -F" " '{print $1, $9, $3 $4}' $raw_data_file > $plot_data_file
 echo "Plotting"
 
 gnuplot -p -e ' 
-                set title "Read times";
+                set title "@PLOT_TITLE@";
                 filenames = "'$plot_data_file'"
               ' plot_config.gnu

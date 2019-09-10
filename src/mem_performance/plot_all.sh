@@ -17,5 +17,5 @@ for filename in plot_*.sh; do
 		continue
 	fi
 	echo "Executing $filename"
-    ./$filename
+    ./$filename $@
 done
