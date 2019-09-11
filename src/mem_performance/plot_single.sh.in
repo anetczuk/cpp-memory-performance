@@ -43,4 +43,4 @@ echo "Plotting"
 gnuplot -p -e ' 
                 set title "@PLOT_TITLE@";
                 filenames = "'$plot_data_file'"
-              ' plot_config.gnu
+              ' plot_config_single.gnu

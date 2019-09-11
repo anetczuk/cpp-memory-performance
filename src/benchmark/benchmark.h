@@ -66,7 +66,7 @@ namespace benchmark {
     	virtual BenchResult experiment(const std::size_t experimentNo) = 0;
 
 
-    	void run(const std::size_t experimentsNumber) {
+    	void run(const std::size_t experimentsNumber, std::ostream& outStream = std::cout) {
 			/// warm up
     		std::cerr << "warming up" << std::endl;
 			experiment(experimentsNumber);
@@ -88,8 +88,8 @@ namespace benchmark {
 
                 std::cerr << std::fixed << i << "/" << experimentsNumber << " iters: " << iters << " repeats: " << data.repeats << " memory: " << memSize << " B " << memHuman << std::endl;
 
-                std::cout << std::fixed << memSize << " B " << memHuman << " ";
-                std::cout << std::fixed << "time/iter: " << timePerIter << " ns time/item: " << timePerElem << " ns iters: " << iters << " items: " << listSize << std::endl;
+                outStream << std::fixed << memSize << " B " << memHuman << " ";
+                outStream << std::fixed << "time/iter: " << timePerIter << " ns time/item: " << timePerElem << " ns iters: " << iters << " items: " << listSize << std::endl;
             }
     	}
 

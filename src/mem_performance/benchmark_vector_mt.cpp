@@ -21,69 +21,67 @@
 /// SOFTWARE.
 ///
 
-#ifndef MEM_PERFORMANCE_ARRAY_H_
-#define MEM_PERFORMANCE_ARRAY_H_
+#include <thread>
+#include <fstream>
+#include <string>
 
-#include <vector>
-
-
-typedef std::vector<uint64_t> StdVector;
+#include "bench_array.h"
 
 
-struct Array {
-	typedef uint64_t value_type;
-	value_type* raw_data;
-	std::size_t data_size;
+struct Worker {
+public:
 
-	Array(): raw_data(nullptr) {
-		init(0, 1);
+	std::thread worker;
+	std::ofstream outFile;
+	VectorExperiment<StdVector> experiment;
+
+
+	Worker(const unsigned int workerNumber): worker(), outFile(), experiment() {
+		const std::string filePath = "./data/raw_data_vector_mt_core_" + std::to_string(workerNumber+1) + ".txt";
+		outFile.open( filePath );
+
+		experiment.logFunctor.maxSizeB = 512*1024*1024L;
 	}
 
-	Array(const std::size_t size, const value_type initVal): raw_data(nullptr), data_size(0) {
-		init(size, initVal);
+	void run() {
+		worker = std::thread( &Worker::execute, this );
 	}
 
-	virtual ~Array() {
-		release();
+	void join() {
+		worker.join();
 	}
 
-	Array& operator =( const Array& object ) {
-	    if( &object == this ) {
-	    	/// do nothing
-	    	return *this;
-	    }
-	    release();
-	    Array* obj = const_cast<Array*>(&object);
-	    raw_data = obj->raw_data;
-	    obj->raw_data = nullptr;
-	    return * this;
-	}
 
-	void init(const std::size_t size, const value_type initVal) {
-		release();
-		data_size = size;
-		raw_data = new value_type[data_size];
-		for(std::size_t i=0; i<data_size; ++i) {
-			raw_data[i] = initVal;
-		}
-	}
+private:
 
-	void release() {
-		if (raw_data == nullptr)
-			return ;
-		delete[] raw_data;
-		raw_data = nullptr;
+	void execute() {
+		experiment.initialize();
+		experiment.run( outFile );
 	}
-
-	const value_type* data() const {
-		return raw_data;
-	}
-
-	std::size_t size() const {
-		return data_size;
-	}
-
 };
 
 
-#endif /* MEM_PERFORMANCE_ARRAY_H_ */
+int main() {
+	unsigned int nthreads = std::thread::hardware_concurrency();
+
+	std::cerr << "found threads: " << nthreads << std::endl;
+
+	std::vector<Worker> workers;
+	workers.reserve(nthreads);				/// make sure threads won't be copied
+
+	/// initialize
+	for(unsigned int i=0; i<nthreads; ++i) {
+		workers.push_back( Worker(i) );
+	}
+
+	/// execute
+	for(unsigned int i=0; i<nthreads; ++i) {
+		workers[i].run();
+	}
+
+	/// wait for finish
+	for(unsigned int i=0; i<nthreads; ++i) {
+		workers[i].join();
+	}
+    return 0;
+}

@@ -84,21 +84,26 @@ public:
 
 		avgProbesFactor = 50;
 		avgProbesMin = 5;
+	}
+
+	~VectorExperiment() override {
+	}
+
+	void initialize() {
+		std::cerr << "initializing memory" << std::endl;
 
 		expsNumber = logFunctor.experimentsNumber();
 
-		//TODO: adding memory declaration here helps timing
-
-		std::cerr << "initializing memory" << std::endl;
+//		container = BType( logFunctor.maxSizeB, 1 );
 		const std::size_t listSize = calcContainerSize( logFunctor.maxSizeB );
-		container = BType( listSize, 1 );
+		container = BType( listSize * 2, 1 );
 	}
 
-	virtual ~VectorExperiment() {
-	}
-
-	void run() {
-		benchmark::ContainerExperiment::run(expsNumber);
+	void run(std::ostream& outStream = std::cout) {
+		if (container.size() < 1) {
+			initialize();
+		}
+		benchmark::ContainerExperiment::run(expsNumber, outStream);
 	}
 
 	benchmark::BenchResult experiment(const std::size_t experimentNo) override {
