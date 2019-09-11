@@ -2,7 +2,7 @@
 ##
 ##
 
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.1.1)
 
 
 if( "${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}" )
@@ -29,7 +29,7 @@ endif()
 if (CMAKE_VERSION VERSION_LESS "3.1")
     ## handled by gcc and clang
     set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99" )
-    set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11" )
+    set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c11" )
 else()
     ## supported by CMake 3.1 and above
     set( CMAKE_C_STANDARD 99 )
@@ -64,16 +64,28 @@ if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
         
         set( COVERAGE_COMPILER_FLAGS "-g -O0 --coverage -fprofile-arcs -ftest-coverage" )
         set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${COVERAGE_COMPILER_FLAGS}" )
-        set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COVERAGE_COMPILER_FLAGS}" )
     endif()
     
     option(GPROF_ANALYSIS "GProf analysis (for GCC)" OFF )
     if ( GPROF_ANALYSIS )
         set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -pg" )
+    endif()
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    option(CODE_COVERAGE "Code coverage (for GCC)" OFF )
+    if ( CODE_COVERAGE )
+        ## to check compilation parameters run "make VERBOSE=1"
+        ## to test is program is compiled properly call "strings test.exe | grep gcda"
+        
+        set( COVERAGE_COMPILER_FLAGS "-g -O0 --coverage -fprofile-arcs -ftest-coverage" )
+        set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COVERAGE_COMPILER_FLAGS}" )
+    endif()
+    
+    option(GPROF_ANALYSIS "GProf analysis (for GCC)" OFF )
+    if ( GPROF_ANALYSIS )
         set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg" )
     endif()
-else()
-    message( STATUS "Code coverage unavailable for your compiler: '${CMAKE_C_COMPILER_ID}'" )
 endif()
 
 
@@ -85,6 +97,14 @@ if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
     option( ADDRESS_SANITIZER "Address sanitizer (for clang)" OFF )
     if( ADDRESS_SANITIZER )
         set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
+    endif()
+endif()
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+    ## other sanitizers (memory, leak) does not work properly on clang 3.5
+    option( ADDRESS_SANITIZER "Address sanitizer (for clang)" OFF )
+    if( ADDRESS_SANITIZER )
+        set( CMAKE_CXX_COMPILER_ID "${CMAKE_CXX_COMPILER_ID} -fsanitize=address -fno-omit-frame-pointer")
     endif()
 endif()
 
