@@ -21,8 +21,8 @@
 /// SOFTWARE.
 ///
 
-#ifndef SRC_BENCH_H_
-#define SRC_BENCH_H_
+#ifndef SRC_BENCHMARK_H_
+#define SRC_BENCHMARK_H_
 
 #include <iostream>
 
@@ -98,4 +98,4 @@ namespace benchmark {
 }
 
 
-#endif /* SRC_BENCH_H_ */
+#endif /* SRC_BENCHMARK_H_ */

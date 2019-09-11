@@ -25,6 +25,9 @@ file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_config_multi.gnu DESTINATION ${CMAKE
 file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_vector_mt.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
 file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_vector_mp.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
 
+file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_cllist_mt.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
+file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_cllist_mp.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
+
 
 function(generate_benchmark_script data_type plot_title)
     set( GENERATOR_FILE "${CMAKE_CURRENT_SOURCE_DIR}/plot_single.sh.in" )

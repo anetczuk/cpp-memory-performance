@@ -80,19 +80,18 @@ public:
 
 		avgProbesFactor = 50;
 		avgProbesMin = 5;
-
-		initialize();
 	}
 
-	virtual ~ListExperiment() {
+	~ListExperiment() override {
 	}
 
 	void initialize() {
 		expsNumber = logFunctor.experimentsNumber();
 	}
 
-	void run() {
-		benchmark::ContainerExperiment::run(expsNumber);
+	void run(std::ostream& outStream = std::cout) {
+		initialize();
+		benchmark::ContainerExperiment::run(expsNumber, outStream);
 	}
 
 	benchmark::BenchResult experiment(const std::size_t experimentNo) override {

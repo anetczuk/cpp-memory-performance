@@ -21,34 +21,62 @@
 /// SOFTWARE.
 ///
 
-#include <fstream>
-#include <string>
+#ifndef SRC_BENCHMARK_THREAD_H_
+#define SRC_BENCHMARK_THREAD_H_
 
-#include "benchmark/benchmark_thread.h"
-#include "bench_array.h"
+#include <thread>
+#include <vector>
 
-
-typedef VectorExperiment<StdVector> Experiment;
-typedef benchmark::ThreadedExperiment<Experiment> Worker;
+#include "benchmark.h"
 
 
-int main() {
-	unsigned int nthreads = std::thread::hardware_concurrency();
+namespace benchmark {
 
-	std::cerr << "found threads: " << nthreads << std::endl;
+	template <typename EType>
+	struct ThreadedExperiment {
+	public:
 
-	std::vector<Worker> workers;
-	workers.reserve(nthreads);				/// make sure threads won't be copied
+		std::thread worker;
+		std::ofstream outFile;
+		EType experiment;
 
-	/// initialize
-	for(unsigned int i=0; i<nthreads; ++i) {
-		const std::string filePath = "./data/raw_data_vector_mt_core_" + std::to_string(i+1) + ".txt";
-		workers.push_back( Worker(filePath) );
-		//Worker& currWorker = workers.back();
-		//currWorker.experiment.logFunctor.maxSizeB = 512*1024*1024L;
-	}
 
-	Worker::runAll( workers );
+		ThreadedExperiment(const std::string& outputFile): worker(), outFile(), experiment() {
+			outFile.open(outputFile);
+		}
 
-    return 0;
+		void run() {
+			worker = std::thread( &ThreadedExperiment<EType>::execute, this );
+		}
+
+		void join() {
+			worker.join();
+		}
+
+		static void runAll( std::vector< ThreadedExperiment<EType> >& container ) {
+			const std::size_t cSize = container.size();
+
+			/// execute
+			for(std::size_t i=0; i<cSize; ++i) {
+				container[i].run();
+			}
+
+			/// wait for finish
+			for(std::size_t i=0; i<cSize; ++i) {
+				container[i].join();
+			}
+		}
+
+
+	private:
+
+		void execute() {
+			experiment.initialize();
+			experiment.run( outFile );
+		}
+	};
+
 }
+
+
+#endif /* SRC_BENCHMARK_THREAD_H_ */

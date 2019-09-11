@@ -25,10 +25,12 @@
 #include <string>
 
 #include "benchmark/benchmark_thread.h"
-#include "bench_array.h"
+#include "bench_list.h"
+
+#include "CustomLinkedList.h"
 
 
-typedef VectorExperiment<StdVector> Experiment;
+typedef ListExperiment<CustomLinkedList> Experiment;
 typedef benchmark::ThreadedExperiment<Experiment> Worker;
 
 
@@ -42,7 +44,7 @@ int main() {
 
 	/// initialize
 	for(unsigned int i=0; i<nthreads; ++i) {
-		const std::string filePath = "./data/raw_data_vector_mt_core_" + std::to_string(i+1) + ".txt";
+		const std::string filePath = "./data/raw_data_cllist_mt_core_" + std::to_string(i+1) + ".txt";
 		workers.push_back( Worker(filePath) );
 		//Worker& currWorker = workers.back();
 		//currWorker.experiment.logFunctor.maxSizeB = 512*1024*1024L;
