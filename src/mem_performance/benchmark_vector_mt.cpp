@@ -21,7 +21,6 @@
 /// SOFTWARE.
 ///
 
-#include <fstream>
 #include <string>
 
 #include "benchmark/benchmark_thread.h"

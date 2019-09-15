@@ -24,6 +24,7 @@
 #ifndef SRC_BENCHMARK_THREAD_H_
 #define SRC_BENCHMARK_THREAD_H_
 
+#include <fstream>
 #include <thread>
 #include <vector>
 
@@ -37,12 +38,13 @@ namespace benchmark {
 	public:
 
 		std::thread worker;
-		std::ofstream outFile;
+		std::unique_ptr<std::ofstream> outFile;
 		EType experiment;
 
 
-		ThreadedExperiment(const std::string& outputFile): worker(), outFile(), experiment() {
-			outFile.open(outputFile);
+		ThreadedExperiment(const std::string& outputFile): worker(), outFile(nullptr), experiment() {
+			outFile.reset( new std::ofstream() );
+			outFile->open(outputFile);
 		}
 
 		void run() {
@@ -72,7 +74,10 @@ namespace benchmark {
 
 		void execute() {
 			experiment.initialize();
-			experiment.run( outFile );
+			if (outFile != nullptr)
+				experiment.run( *outFile );
+			else
+				experiment.run();
 		}
 	};
 
