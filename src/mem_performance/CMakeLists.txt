@@ -22,25 +22,33 @@ file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_all.sh DESTINATION ${CMAKE_CURRENT_B
 file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_config_single.gnu DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
 file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_config_multi.gnu DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
 
-file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_vector_mt.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
-file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_vector_mp.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
 
-file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_cllist_mt.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
-file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_cllist_mp.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
-
-
-function(generate_benchmark_script data_type plot_title)
-    set( GENERATOR_FILE "${CMAKE_CURRENT_SOURCE_DIR}/plot_st.sh.in" )
+function(generate_benchmark_script script_template data_type plot_title)
+    set( GENERATOR_FILE "${CMAKE_CURRENT_SOURCE_DIR}/${script_template}" )
     set( DATA_TYPE ${data_type} )
     set( PLOT_TITLE ${plot_title} )
     configure_file( ${GENERATOR_FILE} "plot_${data_type}.sh" @ONLY )
 endfunction()
 
-generate_benchmark_script( raw_st "std::vector access times (raw)" )
-generate_benchmark_script( vector_st "std::vector access times" )
-generate_benchmark_script( array_st "raw array access times" )
-generate_benchmark_script( cllist_st "linked list access times" )
-generate_benchmark_script( cllist_st_small "linked list access times" )
+function(generate_benchmark_script_mp executable data_type plot_title)
+    set( GENERATOR_FILE "${CMAKE_CURRENT_SOURCE_DIR}/plot_mp.sh.in" )
+    set( DATA_TYPE ${data_type} )
+    set( PLOT_TITLE ${plot_title} )
+    configure_file( ${GENERATOR_FILE} "plot_${data_type}.sh" @ONLY )
+endfunction()
+
+
+generate_benchmark_script( plot_st.sh.in    raw_st "std::vector access times (raw)" )
+generate_benchmark_script( plot_st.sh.in  array_st "raw array access times" )
+generate_benchmark_script( plot_st.sh.in vector_st "std::vector access times" )
+generate_benchmark_script( plot_st.sh.in cllist_st "linked list access times" )
+generate_benchmark_script( plot_st.sh.in cllist_st_small "linked list access times" )
+
+generate_benchmark_script( plot_mt.sh.in vector_mt "multithreaded std::vector access times" )
+generate_benchmark_script( plot_mt.sh.in cllist_mt "multithreaded linked list access times" )
+
+generate_benchmark_script_mp( vector_st vector_mp "multiprocessed std::vector access times" )
+generate_benchmark_script_mp( cllist_st cllist_mp "multiprocessed linked list access times" )
 
 
 ## tests
