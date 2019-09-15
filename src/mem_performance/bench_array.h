@@ -29,6 +29,7 @@
 #include "benchmark/benchmark.h"
 #include "benchmark/benchmark_log.h"
 #include "benchmark/benchmark_time.h"
+#include "benchmark/benchmark_params.h"
 
 #include "array.h"
 
@@ -90,13 +91,21 @@ public:
 	}
 
 	void initialize() {
-		std::cerr << "initializing memory" << std::endl;
+		std::cerr << "initializing memory, maxSizeB: " << logFunctor.maxSizeB << std::endl;
 
 		expsNumber = logFunctor.experimentsNumber();
 
 //		container = BType( logFunctor.maxSizeB, 1 );
 		const std::size_t listSize = calcContainerSize( logFunctor.maxSizeB );
 		container = BType( listSize * 2, 1 );
+	}
+
+	void initialize(int argc, char** argv) {
+		const long long mem = benchmark::get_param_maxmem(argc, argv);
+		if (mem > 0) {
+			logFunctor.maxSizeB = mem;
+		}
+		initialize();
 	}
 
 	void run(std::ostream& outStream = std::cout) {

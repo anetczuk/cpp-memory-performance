@@ -24,8 +24,9 @@
 #include "bench_array.h"
 
 
-int main() {
+int main(int argc, char** argv) {
 	VectorExperiment<StdVector> experiment;
+	experiment.initialize(argc, argv);
 	experiment.run();
     return 0;
 }

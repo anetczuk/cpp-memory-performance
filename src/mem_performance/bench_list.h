@@ -27,6 +27,7 @@
 #include "benchmark/benchmark.h"
 #include "benchmark/benchmark_log.h"
 #include "benchmark/benchmark_time.h"
+#include "benchmark/benchmark_params.h"
 
 
 template <typename BType>
@@ -65,12 +66,14 @@ public:
 
 	std::size_t DATA_SIZE;
 	std::size_t CONTAINER_SIZE;
+	bool initialized;
 
 
 	ListExperiment(): benchmark::ContainerExperiment(),
 			logFunctor(), avgProbesFactor(0.0), avgProbesMin(1),
 			prevMemSize(0), expsNumber(0),
-			DATA_SIZE( sizeof(typename BType::value_type) ), CONTAINER_SIZE( sizeof(BType) )
+			DATA_SIZE( sizeof(typename BType::value_type) ), CONTAINER_SIZE( sizeof(BType) ),
+			initialized( false )
 	{
 		logFunctor.maxSizeB = (1024 + 256)*1024*1024L;
 		logFunctor.factor 	= 3.0;
@@ -87,10 +90,20 @@ public:
 
 	void initialize() {
 		expsNumber = logFunctor.experimentsNumber();
+		initialized = true;
+	}
+
+	void initialize(int argc, char** argv) {
+		const long long mem = benchmark::get_param_maxmem(argc, argv);
+		if (mem > 0) {
+			logFunctor.maxSizeB = mem;
+		}
+		initialize();
 	}
 
 	void run(std::ostream& outStream = std::cout) {
-		initialize();
+		if (initialized == false)
+			initialize();
 		benchmark::ContainerExperiment::run(expsNumber, outStream);
 	}
 

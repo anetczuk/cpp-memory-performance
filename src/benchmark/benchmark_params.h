@@ -21,14 +21,36 @@
 /// SOFTWARE.
 ///
 
-#include "bench_list.h"
+#ifndef SRC_BENCHMARK_BENCHMARK_PARAMS_H_
+#define SRC_BENCHMARK_BENCHMARK_PARAMS_H_
 
-#include "CustomLinkedList.h"
+#include <stdlib.h>     /* atoi */
 
 
-int main(int argc, char** argv) {
-	ListExperiment<CustomLinkedList> experiment;
-	experiment.initialize(argc, argv);
-	experiment.run();
-    return 0;
+namespace benchmark {
+
+	char* get_param(const std::string& param, int argc, char** argv) {
+		int i = 0;
+		for(; i<argc; ++i) {
+			if (param.compare( argv[i] ) == 0) {
+				break;
+			}
+		}
+		if (i < (argc-1)) {
+			return argv[i+1];
+		}
+		return nullptr;
+	}
+
+	long long get_param_maxmem(int argc, char** argv) {
+		const char* maxMem = get_param("--maxmem", argc, argv);
+		if (maxMem == nullptr) {
+			return -1;
+		}
+		return atoll(maxMem);
+	}
+
 }
+
+
+#endif /* SRC_BENCHMARK_BENCHMARK_PARAMS_H_ */

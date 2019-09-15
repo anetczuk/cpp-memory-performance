@@ -11,6 +11,8 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 cd $SCRIPT_DIR
 
 
+argv=$@
+
 run_benchmark=1
 while test $# != 0; do
     case "$1" in
@@ -30,7 +32,7 @@ plot_data_file=./data/plot_data_@DATA_TYPE@.txt
 
 if [ $run_benchmark -ne 0 ]; then
 	echo "Generating data"
-	$benchmark_exec > $raw_data_file
+	$benchmark_exec $argv > $raw_data_file
 fi
 
 
