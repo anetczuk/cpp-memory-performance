@@ -37,10 +37,10 @@ function(generate_benchmark_script data_type plot_title)
 endfunction()
 
 generate_benchmark_script( raw_st "std::vector access times (raw)" )
-generate_benchmark_script( vector_single "std::vector access times" )
-generate_benchmark_script( array "raw array access times" )
-generate_benchmark_script( cllist "linked list access times" )
-generate_benchmark_script( cllist_small "linked list access times" )
+generate_benchmark_script( vector_st "std::vector access times" )
+generate_benchmark_script( array_st "raw array access times" )
+generate_benchmark_script( cllist_st "linked list access times" )
+generate_benchmark_script( cllist_st_small "linked list access times" )
 
 
 ## tests
