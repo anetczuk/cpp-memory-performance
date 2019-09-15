@@ -60,7 +60,8 @@ namespace benchmark {
 
 			/// execute
 			for(std::size_t i=0; i<cSize; ++i) {
-				container[i].run();
+				ThreadedExperiment<EType>& experiment = container[i];
+				experiment.run();
 			}
 
 			/// wait for finish
@@ -73,7 +74,6 @@ namespace benchmark {
 	private:
 
 		void execute() {
-			experiment.initialize();
 			if (outFile != nullptr)
 				experiment.run( *outFile );
 			else
