@@ -10,11 +10,11 @@
 TEST(CustomLinkedList, listMemSize) {
     CustomLinkedList listA;
     listA.randomize();
-    EXPECT_EQ(40, listA.memSize());
+    EXPECT_EQ(20, listA.memSize());
 
     CustomLinkedList listB(1);
     listB.randomize();
-    EXPECT_EQ(2032, listB.memSize());
+    EXPECT_EQ(2012, listB.memSize());
 }
 
 TEST(CustomLinkedList, properHead) {
