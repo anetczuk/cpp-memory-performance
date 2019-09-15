@@ -10,6 +10,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 cd $SCRIPT_DIR
 
+SCRIPT_NAME=$(basename "$0")
+SCRIPT_NAME=${SCRIPT_NAME%.*}
+
 
 argv=$@
 
@@ -23,12 +26,14 @@ while test $# != 0; do
 done
 
 
-mkdir -p data
+DATA_DIR="./data"
+
+mkdir -p $DATA_DIR
 
 
 benchmark_exec=./benchmark_@DATA_TYPE@
-raw_data_file=./data/raw_data_@DATA_TYPE@.txt
-plot_data_file=./data/plot_data_@DATA_TYPE@.txt
+raw_data_file=$DATA_DIR/raw_data_@DATA_TYPE@.txt
+plot_data_file=$DATA_DIR/plot_data_@DATA_TYPE@.txt
 
 if [ $run_benchmark -ne 0 ]; then
 	echo "Generating data"
@@ -40,9 +45,12 @@ echo "Extracting data"
 awk -F" " '{print $1, $9, $3 $4}' $raw_data_file > $plot_data_file
 
 
-echo "Plotting"
+plot_png="$DATA_DIR/${SCRIPT_NAME}.png"
 
+
+echo "Plotting"
 gnuplot -p -e ' 
                 set title "@PLOT_TITLE@";
-                filenames = "'$plot_data_file'"
+                filenames = "'$plot_data_file'";
+                output_png = "'"$plot_png"'"
               ' plot_config_single.gnu

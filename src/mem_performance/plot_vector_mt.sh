@@ -6,6 +6,9 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 cd $SCRIPT_DIR
 
+SCRIPT_NAME=$(basename "$0")
+SCRIPT_NAME=${SCRIPT_NAME%.*}
+
 
 run_benchmark=1
 while test $# != 0; do
@@ -22,11 +25,13 @@ cores_num=$(grep -c ^processor /proc/cpuinfo)
 echo "Detected cores: ${cores_num}"
 
 
-mkdir -p data
+DATA_DIR="./data"
+
+mkdir -p $DATA_DIR
 
 
-raw_file_prefix=./data/raw_data_vector_mt_core
-plot_file_prefix=./data/plot_data_vector_mt_core
+raw_file_prefix=$DATA_DIR/raw_data_vector_mt_core
+plot_file_prefix=$DATA_DIR/plot_data_vector_mt_core
 
 
 if [ $run_benchmark -ne 0 ]; then
@@ -46,5 +51,12 @@ for i in $(seq 1 $cores_num); do
 done
 
 
+plot_png="$DATA_DIR/${SCRIPT_NAME}.png"
+
+
 echo "Plotting"
-gnuplot -p -e 'set title "multithreaded std::vector access times"; filenames = "'"$files_string"'"' plot_config_multi.gnu
+gnuplot -p -e '
+			   set title "multithreaded std::vector access times"; 
+			   filenames = "'"$files_string"'";
+			   output_png = "'$plot_png'"
+			  ' plot_config_multi.gnu

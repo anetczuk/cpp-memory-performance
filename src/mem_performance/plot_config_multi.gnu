@@ -13,3 +13,10 @@ set xtics ("1KB" 1024, "32KB" 32768, "256KB" 262144, "1MB" 1048576, "9MB" 943718
 #}
 
 plot for [file in filenames] file using 1:2 title "mem access" with lines lw 3
+
+
+## replot to png
+set terminal png
+set output output_png
+#set output 'plot.png'
+replot
