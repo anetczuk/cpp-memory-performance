@@ -209,15 +209,16 @@ if( CMAKE_TESTING_ENABLED )
     ##
     ## Google Test advises to build it inside project's cmake list to have the same compiler flags.
     ##
+    
     ExternalProject_Add( googletest
                          SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../libs/googletest-release-1.8.1/googletest
                          PREFIX ${CMAKE_CURRENT_BINARY_DIR}/gtest
                          INSTALL_COMMAND "" 
                          )
                          
-    #ExternalProject_Get_Property(googletest source_dir binary_dir)
-    #set( gtest_source_dir ${source_dir} )
-    #include_directories(${gtest_source_dir}/include)
+    ExternalProject_Get_Property(googletest source_dir binary_dir)
+    set( gtest_source_dir ${source_dir} )
+    include_directories( SYSTEM ${gtest_source_dir}/include )
                          
     ExternalProject_Get_Property(googletest binary_dir)
     set( gtest_binary_dir ${binary_dir} )
