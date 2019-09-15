@@ -30,7 +30,7 @@ file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_cllist_mp.sh DESTINATION ${CMAKE_CUR
 
 
 function(generate_benchmark_script data_type plot_title)
-    set( GENERATOR_FILE "${CMAKE_CURRENT_SOURCE_DIR}/plot_single.sh.in" )
+    set( GENERATOR_FILE "${CMAKE_CURRENT_SOURCE_DIR}/plot_st.sh.in" )
     set( DATA_TYPE ${data_type} )
     set( PLOT_TITLE ${plot_title} )
     configure_file( ${GENERATOR_FILE} "plot_${data_type}.sh" @ONLY )
