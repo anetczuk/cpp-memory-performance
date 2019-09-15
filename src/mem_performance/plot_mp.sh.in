@@ -36,6 +36,21 @@ DATA_DIR="./data"
 mkdir -p $DATA_DIR
 
 
+pids=
+
+# trap ctrl-c and call ctrl_c()
+trap ctrl_c INT
+
+function ctrl_c() {
+	echo "** Trapped CTRL-C"
+	
+	## kill all subprocesses
+	for pid in ${pids[*]}; do
+	    kill $pid
+	done
+}
+
+
 benchmark_exec=./benchmark_@BENCHMARK_TYPE@
 raw_file_prefix=$DATA_DIR/@DATA_TYPE@_data_raw_proc
 plot_file_prefix=$DATA_DIR/@DATA_TYPE@_data_plot_proc
