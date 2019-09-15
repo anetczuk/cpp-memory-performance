@@ -34,7 +34,7 @@ typedef ListExperiment<CustomLinkedList> Experiment;
 typedef benchmark::ThreadedExperiment<Experiment> Worker;
 
 
-int main() {
+int main(int argc, char** argv) {
 	unsigned int nthreads = std::thread::hardware_concurrency();
 
 	std::cerr << "found threads: " << nthreads << std::endl;
@@ -46,8 +46,8 @@ int main() {
 	for(unsigned int i=0; i<nthreads; ++i) {
 		const std::string filePath = "./data/raw_data_cllist_mt_core_" + std::to_string(i+1) + ".txt";
 		workers.push_back( Worker(filePath) );
-		//Worker& currWorker = workers.back();
-		//currWorker.experiment.logFunctor.maxSizeB = 512*1024*1024L;
+		Worker& currWorker = workers.back();
+		currWorker.experiment.initialize(argc, argv);
 	}
 
 	Worker::runAll( workers );

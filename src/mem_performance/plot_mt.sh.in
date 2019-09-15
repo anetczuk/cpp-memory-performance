@@ -14,6 +14,8 @@ SCRIPT_NAME=$(basename "$0")
 SCRIPT_NAME=${SCRIPT_NAME%.*}
 
 
+argv=$@
+
 run_benchmark=1
 while test $# != 0; do
     case "$1" in
@@ -41,18 +43,18 @@ plot_file_prefix=$DATA_DIR/plot_data_@DATA_TYPE@_core
 
 if [ $run_benchmark -ne 0 ]; then
 	echo "Generating data"
-	$benchmark_exec
+	$benchmark_exec $argv
 fi
 
 
 ## processing data
 echo "Extracting data"
-plot_data_file=""
+plot_data_files=""
 for i in $(seq 1 $cores_num); do
     in_file=${raw_file_prefix}_${i}.txt
-    plot_data_file=${plot_file_prefix}_$i.txt
-    awk -F" " '{print $1, $9, $3 $4}' $in_file > $plot_data_file
-    plot_data_file=$plot_data_file" "$files_string
+    data_file=${plot_file_prefix}_$i.txt
+    awk -F" " '{print $1, $9, $3 $4}' $in_file > $data_file
+    plot_data_files=$plot_data_files" "$data_file
 done
 
 
@@ -62,6 +64,6 @@ plot_png="$DATA_DIR/${SCRIPT_NAME}.png"
 echo "Plotting"
 gnuplot -p -e '
 			    set title "@PLOT_TITLE@"; 
-			    filenames = "'"$plot_data_file"'";
+			    filenames = "'"$plot_data_files"'";
 			    output_png = "'"$plot_png"'"
 			  ' plot_config_multi.gnu

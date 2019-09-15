@@ -29,7 +29,7 @@
 
 namespace benchmark {
 
-	char* get_param(const std::string& param, int argc, char** argv) {
+	char* get_param_raw(const std::string& param, int argc, char** argv) {
 		int i = 0;
 		for(; i<argc; ++i) {
 			if (param.compare( argv[i] ) == 0) {
@@ -42,8 +42,25 @@ namespace benchmark {
 		return nullptr;
 	}
 
+	char* get_param(const std::string& param, int argc, char** argv) {
+		char* value = nullptr;
+		value = get_param_raw( "-" + param, argc, argv );
+		if (value != nullptr) {
+			return value;
+		}
+		value = get_param_raw( "--" + param, argc, argv );
+		if (value != nullptr) {
+			return value;
+		}
+		value = get_param_raw( param, argc, argv );
+		if (value != nullptr) {
+			return value;
+		}
+		return nullptr;
+	}
+
 	long long get_param_maxmem(int argc, char** argv) {
-		const char* maxMem = get_param("--maxmem", argc, argv);
+		const char* maxMem = get_param("maxmem", argc, argv);
 		if (maxMem == nullptr) {
 			return -1;
 		}
