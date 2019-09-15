@@ -41,7 +41,7 @@ int main(int argc, char** argv) {
 
 	/// initialize
 	for(unsigned int i=0; i<nthreads; ++i) {
-		const std::string filePath = "./data/raw_data_vector_mt_core_" + std::to_string(i+1) + ".txt";
+		const std::string filePath = "./data/vector_mt_data_raw_core_" + std::to_string(i+1) + ".txt";
 		workers.push_back( Worker(filePath) );
 		Worker& currWorker = workers.back();
 		currWorker.experiment.initialize(argc, argv);

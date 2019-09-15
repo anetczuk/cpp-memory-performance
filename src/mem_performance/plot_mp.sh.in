@@ -37,8 +37,8 @@ mkdir -p $DATA_DIR
 
 
 benchmark_exec=./benchmark_@BENCHMARK_TYPE@
-raw_file_prefix=$DATA_DIR/raw_data_@DATA_TYPE@_proc
-plot_file_prefix=$DATA_DIR/plot_data_@DATA_TYPE@_proc
+raw_file_prefix=$DATA_DIR/@DATA_TYPE@_data_raw_proc
+plot_file_prefix=$DATA_DIR/@DATA_TYPE@_data_plot_proc
 
 
 if [ $run_benchmark -ne 0 ]; then
