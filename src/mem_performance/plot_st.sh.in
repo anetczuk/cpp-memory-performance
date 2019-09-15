@@ -48,9 +48,13 @@ awk -F" " '{print $1, $9, $3 $4}' $raw_data_file > $plot_data_file
 plot_png="$DATA_DIR/${SCRIPT_NAME}.png"
 
 
-echo "Plotting"
-gnuplot -p -e ' 
-                set title "@PLOT_TITLE@";
-                filenames = "'"$plot_data_file"'";
-                output_png = "'"$plot_png"'"
-              ' plot_config_single.gnu
+if [ ! -s "$plot_data_file" ]; then
+	echo "No data to plot"
+else
+	echo "Plotting"
+	gnuplot -p -e ' 
+	                set title "@PLOT_TITLE@";
+	                filenames = "'"$plot_data_file"'";
+	                output_png = "'"$plot_png"'"
+	              ' plot_config_single.gnu
+fi

@@ -54,16 +54,22 @@ for i in $(seq 1 $cores_num); do
     in_file=${raw_file_prefix}_${i}.txt
     data_file=${plot_file_prefix}_$i.txt
     awk -F" " '{print $1, $9, $3 $4}' $in_file > $data_file
-    plot_data_files=$plot_data_files" "$data_file
+    if [ -s "$data_file" ]; then
+    	plot_data_files=$plot_data_files" "$data_file
+    fi
 done
 
 
 plot_png="$DATA_DIR/${SCRIPT_NAME}.png"
 
 
-echo "Plotting"
-gnuplot -p -e '
-			    set title "@PLOT_TITLE@"; 
-			    filenames = "'"$plot_data_files"'";
-			    output_png = "'"$plot_png"'"
-			  ' plot_config_multi.gnu
+if [ -z "$plot_data_files" ]; then
+	echo "No data to plot"
+else
+	echo "Plotting"
+	gnuplot -p -e '
+				    set title "@PLOT_TITLE@"; 
+				    filenames = "'"$plot_data_files"'";
+				    output_png = "'"$plot_png"'"
+				  ' plot_config_multi.gnu
+fi
