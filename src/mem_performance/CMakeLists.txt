@@ -36,6 +36,7 @@ function(generate_benchmark_script data_type plot_title)
     configure_file( ${GENERATOR_FILE} "plot_${data_type}.sh" @ONLY )
 endfunction()
 
+generate_benchmark_script( raw_st "std::vector access times (raw)" )
 generate_benchmark_script( vector_single "std::vector access times" )
 generate_benchmark_script( array "raw array access times" )
 generate_benchmark_script( cllist "linked list access times" )
