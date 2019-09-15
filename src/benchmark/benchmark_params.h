@@ -64,7 +64,7 @@ namespace benchmark {
 		if (maxMem == nullptr) {
 			return -1;
 		}
-		return atoll(maxMem);
+		return atoll(maxMem) * 1024;		/// returns in KB unit
 	}
 
 }
