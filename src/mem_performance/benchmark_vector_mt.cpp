@@ -45,6 +45,7 @@ int main(int argc, char** argv) {
 		workers.push_back( Worker(filePath) );
 		Worker& currWorker = workers.back();
 		currWorker.experiment.parseArguments(argc, argv);
+		currWorker.experiment.logFunctor.maxSizeB /= nthreads;
 	}
 
 	Worker::runAll( workers );

@@ -17,9 +17,13 @@ SCRIPT_NAME=${SCRIPT_NAME%.*}
 argv=$@
 
 run_benchmark=1
+maxmem=0
 while test $# != 0; do
     case "$1" in
-	    --no-benchmark|-nb) run_benchmark=0 ;;
+	    --no-benchmark|-nb) run_benchmark=0;;
+	    --maxmem|-maxmem) 	maxmem="$2"
+	    					shift
+	    					;;
 	    *)  ;;
     esac
     shift
@@ -29,6 +33,14 @@ done
 cores_num=$(grep -c ^processor /proc/cpuinfo)
 
 echo "Detected cores: ${cores_num}"
+
+
+maxmemarg=""
+if [ $maxmem -gt 0 ]; then
+	maxmem=$((maxmem / cores_num))
+	echo "maxmem per process: $maxmem"
+	maxmemarg="--maxmem $maxmem"
+fi
 
 
 DATA_DIR="./data"
@@ -46,7 +58,7 @@ function ctrl_c() {
 	
 	## kill all subprocesses
 	for pid in ${pids[*]}; do
-	    kill $pid
+	    kill $pid || true
 	done
 }
 
@@ -61,7 +73,7 @@ if [ $run_benchmark -ne 0 ]; then
 	for i in $(seq 1 $cores_num); do
 	   echo "Starting benchmark $i"
 	   out_file=${raw_file_prefix}_${i}.txt
-	   $benchmark_exec $argv > $out_file &
+	   $benchmark_exec $maxmemarg $argv > $out_file &
 	   pids[${i}]=$!
 	done  
 
