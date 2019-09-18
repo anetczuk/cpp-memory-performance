@@ -28,7 +28,7 @@
 
 int main(int argc, char** argv) {
 	ListExperiment<CustomLinkedList> experiment;
-	experiment.initialize(argc, argv);
+	experiment.parseArguments(argc, argv);
 	experiment.run();
     return 0;
 }

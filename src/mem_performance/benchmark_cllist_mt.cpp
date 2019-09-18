@@ -47,7 +47,7 @@ int main(int argc, char** argv) {
 		const std::string filePath = "./data/cllist_mt_data_raw_core_" + std::to_string(i+1) + ".txt";
 		workers.push_back( Worker(filePath) );
 		Worker& currWorker = workers.back();
-		currWorker.experiment.initialize(argc, argv);
+		currWorker.experiment.parseArguments(argc, argv);
 	}
 
 	Worker::runAll( workers );

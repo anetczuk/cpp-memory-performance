@@ -100,12 +100,11 @@ public:
 		container = BType( listSize * 2, 1 );
 	}
 
-	void initialize(int argc, char** argv) {
+	void parseArguments(int argc, char** argv) {
 		const long long mem = benchmark::get_param_maxmem(argc, argv);
 		if (mem > 0) {
 			logFunctor.maxSizeB = mem;
 		}
-		initialize();
 	}
 
 	void run(std::ostream& outStream = std::cout) {

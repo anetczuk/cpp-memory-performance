@@ -26,7 +26,7 @@
 
 int main(int argc, char** argv) {
 	VectorExperiment<StdVector> experiment;
-	experiment.initialize(argc, argv);
+	experiment.parseArguments(argc, argv);
 	experiment.run();
     return 0;
 }
