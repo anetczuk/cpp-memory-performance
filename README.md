@@ -5,11 +5,16 @@ Project presents results of various memory benchmarks.
 
 ## Device
 
+To receive detailed info about CPU run: ```lscpu```
+
+To receive detailed info about CPU run: ```sudo dmidecode --type 17```
+
+### Intel i7
 All measurements have been done on following unit: 
 
 CPU:
 - Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
-- 6 cores, 12 threads
+- 6 cores, 2 threads per core
 - L1 cache: 32KB per core (separated for data and for instructions)
 - L2 cache: 256KB per core
 - L3 cache: 9MB SmartCache (Smart Cache refers to the architecture that allows all cores to dynamically share access to the last level cache.)
@@ -19,9 +24,28 @@ RAM:
 - speed: 2667 MT/s
 - size: 2x8192MB
 
-To receive detailed info about CPU run: ```lscpu```
+Compilers:
+- g++ 7.4.0
+- clang++ 6.0.0
 
-To receive detailed info about CPU run: ```sudo dmidecode --type 17```
+
+### Raspberry Pi 3 Model B Rev 1.2
+
+CPU:
+- Broadcom BCM2837 SoC with ARMv7 Processor rev 4 (v7l) - ARM Cortex-A53 @ 1200 MHz
+- 4 cores, 1 thread per core
+- L1 cache: 32kB
+- L2 cache: 512kB
+- L3 cache: none
+
+RAM:
+- type: SDRAM
+- speed: 900 MHz
+- size: 1 GB (shared by the GPU and CPU)
+
+Compilers:
+- g++ 4.9.2
+- clang++ 3.5.0
 
 
 ## Benchmarking
