@@ -29,11 +29,7 @@
 #include "array.h"
 
 
-inline void do_benchmark(const StdVector& container, const std::size_t memSizeB, const std::size_t itersnum) {
-	const std::size_t listSize = memSizeB / sizeof( StdVector::value_type );
-	if (container.size() < listSize) {
-		return ;
-	}
+inline uint64_t iterate(const StdVector& container, const std::size_t listSize, const std::size_t itersnum) {
 	benchmark::Clock::TimePoint startTime, endTime;
 
 	static const std::size_t repeats = 5;
@@ -57,11 +53,21 @@ inline void do_benchmark(const StdVector& container, const std::size_t memSizeB,
 		bestDur = std::min(bestDur, duration);
 	}
 
+	return bestDur;
+}
+
+inline void do_benchmark(const StdVector& container, const std::size_t memSizeB, const std::size_t itersnum) {
+	const std::size_t listSize = memSizeB / sizeof( StdVector::value_type );
+	if (container.size() < listSize) {
+		return ;
+	}
+
+	const uint64_t bestDur = iterate(container, listSize, itersnum);
 
     const double timePerIter = double(bestDur) / itersnum;
     const double timePerElem = timePerIter / listSize;
 
-    std::cerr << std::fixed << " iters: " << itersnum << " repeats: " << repeats << " memory: " << memSizeB << " B " << std::endl;
+    std::cerr << std::fixed << " iters: " << itersnum << " memory: " << memSizeB << " B " << std::endl;
 
     std::cout << std::fixed << memSizeB << " B " << "0 B" << " ";
     std::cout << std::fixed << "time/iter: " << timePerIter << " ns time/item: " << timePerElem << " ns iters: " << itersnum << " items: " << listSize << std::endl;
@@ -78,30 +84,37 @@ int main(int argc, char** argv) {
 	const std::size_t vSize = memSizeB / sizeof( StdVector::value_type );
 	StdVector vector(vSize, 1);
 
-	do_benchmark( vector, 16*1024*1024,   100 );
-	do_benchmark( vector,  8*1024*1024,   100 );
-	do_benchmark( vector,  4*1024*1024,  1000 );
-	do_benchmark( vector,  2*1024*1024,  1000 );
+	{
+		/// warm up
+		std::cerr << std::fixed << "warming up" << std::endl;
+		const std::size_t listSize = 16*1024 / sizeof( StdVector::value_type );
+		iterate( vector, listSize, 200000 );
+	}
 
-	do_benchmark( vector,    1024*1024,  1000 );
-	do_benchmark( vector,     512*1024,  1000 );
-	do_benchmark( vector,     256*1024,  1000 );
-	do_benchmark( vector,     128*1024, 10000 );
-
-	do_benchmark( vector,      64*1024, 10000 );
-	do_benchmark( vector,      32*1024, 10000 );
-	do_benchmark( vector,      16*1024, 10000 );
-	do_benchmark( vector,       8*1024, 10000 );
-
-	do_benchmark( vector,       4*1024, 10000 );
-	do_benchmark( vector,       2*1024, 10000 );
-	do_benchmark( vector,         1024, 10000 );
-	do_benchmark( vector,          512, 10000 );
-
-	do_benchmark( vector,          256, 10000 );
-	do_benchmark( vector,          128, 10000 );
-	do_benchmark( vector,           64, 10000 );
 	do_benchmark( vector,           32, 10000 );
+	do_benchmark( vector,           64, 10000 );
+	do_benchmark( vector,          128, 10000 );
+	do_benchmark( vector,          256, 10000 );
+
+	do_benchmark( vector,          512, 10000 );
+	do_benchmark( vector,         1024, 10000 );
+	do_benchmark( vector,       2*1024, 10000 );
+	do_benchmark( vector,       4*1024, 10000 );
+
+	do_benchmark( vector,       8*1024, 10000 );
+	do_benchmark( vector,      16*1024, 10000 );
+	do_benchmark( vector,      32*1024, 10000 );
+	do_benchmark( vector,      64*1024, 10000 );
+
+	do_benchmark( vector,     128*1024, 10000 );
+	do_benchmark( vector,     256*1024,  1000 );
+	do_benchmark( vector,     512*1024,  1000 );
+	do_benchmark( vector,    1024*1024,  1000 );
+
+	do_benchmark( vector,  2*1024*1024,  1000 );
+	do_benchmark( vector,  4*1024*1024,  1000 );
+	do_benchmark( vector,  8*1024*1024,   100 );
+	do_benchmark( vector, 16*1024*1024,   100 );
 
     return 0;
 }
