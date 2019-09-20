@@ -18,4 +18,9 @@ do for [data_file in filenames] {
 set terminal png
 set output output_png
 #set output 'plot.png'
-replot
+
+## repeat plot call, because 'replot' does not work in multiplot
+do for [data_file in filenames] {
+    plot data_file using 1:2 title "mem access" with points ls 7, \
+         data_file using 1:2 title "bezier smooth" smooth bezier ls 1 lw 2
+}
