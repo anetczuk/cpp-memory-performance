@@ -117,6 +117,19 @@ namespace benchmark {
 		return memsize;
 	}
 
+	long long get_param_long(int argc, char** argv, const std::string& param) {
+		const char* rawParam = get_param(param, argc, argv);
+		if (rawParam == nullptr) {
+			return -1;
+		}
+		const std::string data(rawParam);
+		const std::size_t chNum = data.length();
+		if (chNum < 1) {
+			return -1;
+		}
+		return std::atoll( data.c_str() );
+	}
+
 }
 
 

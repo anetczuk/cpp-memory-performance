@@ -104,6 +104,10 @@ public:
 			exit(1);
 		}
 		logFunctor.maxSizeB = mem;
+        const long long memdiv = benchmark::get_param_long(argc, argv, "memdiv");
+        if (memdiv > 0) {
+            logFunctor.maxSizeB /= memdiv;
+        }
 	}
 
 	void run(std::ostream& outStream = std::cout) {

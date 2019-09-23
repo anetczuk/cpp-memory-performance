@@ -65,9 +65,9 @@ plot_file_prefix=$DATA_DIR/@DATA_TYPE@_data_plot_proc
 if [ $run_benchmark -ne 0 ]; then
 	echo "Generating data"
 	for i in $(seq 1 $cores_num); do
-	   echo "Starting benchmark $i: $benchmark_exec --divmem $cores_num $argv"
+	   echo "Starting benchmark $i: $benchmark_exec --memdiv $cores_num $argv"
 	   out_file=${raw_file_prefix}_${i}.txt
-	   $benchmark_exec --divmem $cores_num $argv > $out_file &
+	   $benchmark_exec --memdiv $cores_num $argv > $out_file &
 	   pids[${i}]=$!
 	done  
 
