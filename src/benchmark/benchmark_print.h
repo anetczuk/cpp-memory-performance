@@ -27,9 +27,20 @@
 #include <sstream>
 
 
+//
+// beffered print to prevent interleaving of messages
+//
+#define BUFFERED( output, data )                \
+            {                                   \
+                std::stringstream stream;       \
+                stream << data;                 \
+                output << stream.str();         \
+            }
+
+
 namespace benchmark {
 
-	static std::string humanMemSize(const std::size_t memSizeB) {
+	inline std::string humanMemSize(const std::size_t memSizeB) {
 		std::stringstream stream;
         const double sizeKB = double(memSizeB) / 1024;
         if (sizeKB < 1024)

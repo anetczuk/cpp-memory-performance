@@ -62,6 +62,7 @@ namespace benchmark {
 	long long get_param_maxmem(int argc, char** argv) {
 		const char* maxMem = get_param("maxmem", argc, argv);
 		if (maxMem == nullptr) {
+		    BUFFERED( std::cerr, "'maxmem' not given\n" );
 			return -1;
 		}
 		return atoll(maxMem) * 1024;		/// returns in KB unit

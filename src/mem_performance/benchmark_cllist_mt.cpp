@@ -23,6 +23,7 @@
 
 #include <fstream>
 #include <string>
+#include <iomanip>
 
 #include "benchmark/benchmark_thread.h"
 #include "bench_list.h"
@@ -37,7 +38,7 @@ typedef benchmark::ThreadedExperiment<Experiment> Worker;
 int main(int argc, char** argv) {
 	unsigned int nthreads = std::thread::hardware_concurrency();
 
-	std::cerr << "found threads: " << nthreads << std::endl;
+	BUFFERED( std::cerr, "found threads: " << nthreads << std::endl );
 
 	std::vector<Worker> workers;
 	workers.reserve(nthreads);				/// make sure threads won't be copied
@@ -48,7 +49,9 @@ int main(int argc, char** argv) {
 		workers.push_back( Worker(filePath) );
 		Worker& currWorker = workers.back();
 		currWorker.experiment.parseArguments(argc, argv);
-		currWorker.experiment.logFunctor.maxSizeB /= nthreads;
+
+		uint64_t& memsize = currWorker.experiment.logFunctor.maxSizeB;
+		memsize /= nthreads;
 	}
 
 	Worker::runAll( workers );

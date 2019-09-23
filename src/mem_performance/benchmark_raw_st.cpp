@@ -46,7 +46,7 @@ inline uint64_t iterate(const StdVector& container, const std::size_t listSize, 
 
 		endTime = benchmark::Clock::Now();
 		if ( sum != listSize*itersnum )  {
-			std::cerr << "internal error" << std::endl;
+		    BUFFERED( std::cerr, "internal error" << std::endl );
 			exit(1);
 		}
 		const uint64_t duration = benchmark::Clock::Duration(startTime, endTime);
@@ -67,27 +67,29 @@ inline void do_benchmark(const StdVector& container, const std::size_t memSizeB,
     const double timePerIter = double(bestDur) / itersnum;
     const double timePerElem = timePerIter / listSize;
 
-    std::cerr << std::fixed << " iters: " << itersnum << " memory: " << memSizeB << " B " << std::endl;
+    BUFFERED( std::cerr, std::fixed << " iters: " << itersnum << " memory: " << memSizeB << " B " << std::endl );
 
-    std::cout << std::fixed << memSizeB << " B " << "0 B" << " ";
-    std::cout << std::fixed << "time/iter: " << timePerIter << " ns time/item: " << timePerElem << " ns iters: " << itersnum << " items: " << listSize << std::endl;
+    BUFFERED( std::cout, std::fixed << memSizeB << " B " << "0 B" << " " );
+    BUFFERED( std::cout, std::fixed << "time/iter: " << timePerIter << " ns time/item: " << timePerElem << " ns iters: " << itersnum << " items: " << listSize << std::endl );
 }
 
 
 int main(int argc, char** argv) {
 	std::size_t memSizeB = 128*1024*1024L;
 	const long long mem = benchmark::get_param_maxmem(argc, argv);
-	if (mem > 0) {
-		memSizeB = mem;
+	if (mem < 1) {
+	    BUFFERED( std::cerr, "invalid maxmem argument\n" );
+		exit(1);
 	}
+	memSizeB = mem;
 
 	const std::size_t vSize = memSizeB / sizeof( StdVector::value_type );
 	StdVector vector(vSize, 1);
 
 	{
 		/// warm up
-		std::cerr << std::fixed << "warming up" << std::endl;
-		const std::size_t listSize = 16*1024 / sizeof( StdVector::value_type );
+	    BUFFERED( std::cerr, std::fixed << "warming up" << std::endl );
+		const std::size_t listSize = std::min( vSize, 16*1024 / sizeof( StdVector::value_type ) );
 		iterate( vector, listSize, 200000 );
 	}
 

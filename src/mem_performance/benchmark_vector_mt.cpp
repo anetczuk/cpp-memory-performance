@@ -34,7 +34,7 @@ typedef benchmark::ThreadedExperiment<Experiment> Worker;
 int main(int argc, char** argv) {
 	unsigned int nthreads = std::thread::hardware_concurrency();
 
-	std::cerr << "found threads: " << nthreads << std::endl;
+	BUFFERED( std::cerr, "found threads: " << nthreads << std::endl );
 
 	std::vector<Worker> workers;
 	workers.reserve(nthreads);				/// make sure threads won't be copied

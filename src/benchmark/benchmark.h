@@ -68,7 +68,7 @@ namespace benchmark {
 
     	void run(const std::size_t experimentsNumber, std::ostream& outStream = std::cout) {
 			/// warm up
-    		std::cerr << "warming up" << std::endl;
+    	    BUFFERED( std::cerr, "warming up" << std::endl );
 			experiment(experimentsNumber);
 
             for(std::size_t i=0; i<=experimentsNumber; ++i) {
@@ -86,10 +86,10 @@ namespace benchmark {
 
                 const std::string memHuman = humanMemSize(memSize);
 
-                std::cerr << std::fixed << i << "/" << experimentsNumber << " iters: " << iters << " repeats: " << data.repeats << " memory: " << memSize << " B " << memHuman << std::endl;
+                BUFFERED( std::cerr, std::fixed << i << "/" << experimentsNumber << " iters: " << iters << " repeats: " << data.repeats << " memory: " << memSize << " B " << memHuman << std::endl );
 
-                outStream << std::fixed << memSize << " B " << memHuman << " ";
-                outStream << std::fixed << "time/iter: " << timePerIter << " ns time/item: " << timePerElem << " ns iters: " << iters << " items: " << listSize << std::endl;
+                BUFFERED( outStream, std::fixed << memSize << " B " << memHuman << " " );
+                BUFFERED( outStream, std::fixed << "time/iter: " << timePerIter << " ns time/item: " << timePerElem << " ns iters: " << iters << " items: " << listSize << std::endl );
             }
     	}
 

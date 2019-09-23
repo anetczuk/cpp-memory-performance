@@ -25,6 +25,7 @@
 #define MEM_PERFORMANCE_BENCH_ARRAY_H_
 
 #include <iostream>
+#include <iomanip>
 
 #include "benchmark/benchmark.h"
 #include "benchmark/benchmark_log.h"
@@ -49,7 +50,7 @@ inline uint64_t bench_iteration(const typename BType::value_type* list, const st
 
 	endTime = benchmark::Clock::Now();
 	if ( sum != listSize*itersnum )  {
-		std::cerr << "internal error" << std::endl;
+	    BUFFERED( std::cerr, "internal error" << std::endl );
 		exit(1);
 	}
 	const uint64_t duration = benchmark::Clock::Duration(startTime, endTime);
@@ -91,7 +92,7 @@ public:
 	}
 
 	void initialize() {
-		std::cerr << "initializing memory, maxSizeB: " << logFunctor.maxSizeB << std::endl;
+	    BUFFERED( std::cerr, "initializing memory, maxSizeB: " << logFunctor.maxSizeB << " (" << std::fixed << std::setw( 6 ) << ( double(logFunctor.maxSizeB) / (1024*1024*1024)) << " GB)" << std::endl );
 
 		expsNumber = logFunctor.experimentsNumber();
 
@@ -108,9 +109,11 @@ public:
 
 	void parseArguments(int argc, char** argv) {
 		const long long mem = benchmark::get_param_maxmem(argc, argv);
-		if (mem > 0) {
-			logFunctor.maxSizeB = mem;
+		if (mem < 1) {
+		    BUFFERED( std::cerr, "invalid maxmem argument\n" );
+			exit(1);
 		}
+		logFunctor.maxSizeB = mem;
 	}
 
 	void run(std::ostream& outStream = std::cout) {
@@ -151,6 +154,8 @@ public:
 	}
 
 	std::size_t calcContainerSize( const std::size_t memSizeB ) const {
+		if (memSizeB <= CONTAINER_SIZE)
+			return 0;
 		return ( memSizeB - CONTAINER_SIZE ) / DATA_SIZE;
 	}
 
