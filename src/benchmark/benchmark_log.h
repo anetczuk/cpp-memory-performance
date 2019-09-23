@@ -69,7 +69,12 @@ namespace benchmark {
             // size = 2^(i/f)
             // log2(size) = i/f
             // i = f * log2(size)
-            const std::size_t iternum = factor * std::log2( maxSizeB - minSize );
+            if (maxSizeB < minSize)
+                return 0;
+            const uint64_t mem = maxSizeB - minSize;
+            if (mem == 0)
+                return 0;
+            const std::size_t iternum = factor * std::log2( mem );
             return iternum;
         }
 

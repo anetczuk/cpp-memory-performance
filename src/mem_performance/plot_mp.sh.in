@@ -17,13 +17,9 @@ SCRIPT_NAME=${SCRIPT_NAME%.*}
 argv=$@
 
 run_benchmark=1
-maxmem=0
 while test $# != 0; do
     case "$1" in
 	    --no-benchmark|-nb) run_benchmark=0;;
-	    --maxmem|-maxmem) 	maxmem="$2"
-	    					shift
-	    					;;
 	    *)  ;;
     esac
     shift
@@ -35,14 +31,6 @@ cores_num=$(grep -c ^processor /proc/cpuinfo)
 echo "Detected cores: ${cores_num}"
 
 
-maxmemarg=""
-if [ $maxmem -gt 0 ]; then
-	maxmem=$((maxmem / cores_num))
-	echo "maxmem per process: $maxmem"
-	maxmemarg="--maxmem $maxmem"
-fi
-
-
 DATA_DIR="./data"
 
 mkdir -p $DATA_DIR
@@ -50,15 +38,21 @@ mkdir -p $DATA_DIR
 
 pids=
 
-# trap ctrl-c and call ctrl_c()
-trap ctrl_c INT
+# INT - ctrl-c
+# ERR - handle "set -e"
+trap ctrl_c INT TERM
+trap ctrl_c ERR
+## KILL signal is impossible to catch
 
 function ctrl_c() {
-	echo "** Trapped CTRL-C"
+	echo "** Script terminated, killing subprocesses"
 	
 	## kill all subprocesses
 	for pid in ${pids[*]}; do
-	    kill $pid || true
+	    kill $pid 2> /dev/null || true 
+	done
+	for pid in ${pids[*]}; do
+	    wait $pid
 	done
 }
 
@@ -71,9 +65,9 @@ plot_file_prefix=$DATA_DIR/@DATA_TYPE@_data_plot_proc
 if [ $run_benchmark -ne 0 ]; then
 	echo "Generating data"
 	for i in $(seq 1 $cores_num); do
-	   echo "Starting benchmark $i"
+	   echo "Starting benchmark $i: $benchmark_exec --divmem $cores_num $argv"
 	   out_file=${raw_file_prefix}_${i}.txt
-	   $benchmark_exec $maxmemarg $argv > $out_file &
+	   $benchmark_exec --divmem $cores_num $argv > $out_file &
 	   pids[${i}]=$!
 	done  
 

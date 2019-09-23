@@ -26,6 +26,8 @@
 
 #include <stdlib.h>     /* atoi */
 
+#include "benchmark_print.h"
+
 
 namespace benchmark {
 
@@ -65,7 +67,54 @@ namespace benchmark {
 		    BUFFERED( std::cerr, "'maxmem' not given\n" );
 			return -1;
 		}
-		return atoll(maxMem) * 1024;		/// returns in KB unit
+		const std::string data(maxMem);
+		const std::size_t chNum = data.length();
+		if (chNum < 1) {
+		    BUFFERED( std::cerr, "'maxmem' empty\n" );
+			return -1;
+		}
+		long long unitMuliplier = 1;
+		double value = -1.0;
+		const char unit = maxMem[ chNum-1 ];
+		switch(unit) {
+		case 'B': {
+		    const std::string strnum = data.substr(0, chNum-1);
+			value = std::stod( strnum );
+			break;
+		}
+		case 'K': {
+			unitMuliplier = 1024;
+            const std::string strnum = data.substr(0, chNum-1);
+            value = std::stod( strnum );
+			break;
+		}
+		case 'M': {
+			unitMuliplier = 1024*1024;
+            const std::string strnum = data.substr(0, chNum-1);
+            value = std::stod( strnum );
+			break;
+		}
+		case 'G': {
+			unitMuliplier = 1024*1024*1024;
+            const std::string strnum = data.substr(0, chNum-1);
+            value = std::stod( strnum );
+			break;
+		}
+		default: {
+			/// no unit
+			value = std::stod( data );
+			break;
+		}
+		}
+		if (value < 0.0) {
+		    BUFFERED( std::cerr, "could not parse 'maxmem' argument: '" << data << "'\n" );
+			return -1;
+		}
+		long long memsize = value * unitMuliplier;
+		if (memsize < 1) {
+			return -1;
+		}
+		return memsize;
 	}
 
 }

@@ -36,7 +36,7 @@ raw_data_file=$DATA_DIR/@DATA_TYPE@_data_raw.txt
 plot_data_file=$DATA_DIR/@DATA_TYPE@_data_plot.txt
 
 if [ $run_benchmark -ne 0 ]; then
-	echo "Generating data"
+	echo "Executing $benchmark_exec $argv"
 	$benchmark_exec $argv > $raw_data_file
 fi
 
