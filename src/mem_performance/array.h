@@ -43,7 +43,7 @@ struct Array {
 		init(size, initVal);
 	}
 
-	virtual ~Array() {
+	~Array() {
 		release();
 	}
 
