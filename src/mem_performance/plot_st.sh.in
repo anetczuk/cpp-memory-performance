@@ -17,9 +17,11 @@ SCRIPT_NAME=${SCRIPT_NAME%.*}
 argv=$@
 
 run_benchmark=1
+run_plot=1
 while test $# != 0; do
     case "$1" in
 	    --no-benchmark|-nb) run_benchmark=0 ;;
+	    --no-plot|-np)      run_plot=0 ;;
 	    *)  ;;
     esac
     shift
@@ -35,9 +37,14 @@ benchmark_exec=./benchmark_@DATA_TYPE@
 raw_data_file=$DATA_DIR/@DATA_TYPE@_data_raw.txt
 plot_data_file=$DATA_DIR/@DATA_TYPE@_data_plot.txt
 
+
 if [ $run_benchmark -ne 0 ]; then
 	echo "Executing $benchmark_exec $argv"
 	$benchmark_exec $argv > $raw_data_file
+fi
+
+if [ $run_plot -eq 0 ]; then
+    exit 0
 fi
 
 

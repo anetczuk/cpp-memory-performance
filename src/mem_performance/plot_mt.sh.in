@@ -17,9 +17,11 @@ SCRIPT_NAME=${SCRIPT_NAME%.*}
 argv=$@
 
 run_benchmark=1
+run_plot=1
 while test $# != 0; do
     case "$1" in
 	    --no-benchmark|-nb) run_benchmark=0 ;;
+	    --no-plot|-np)      run_plot=0 ;;
 	    *)  ;;
     esac
     shift
@@ -44,6 +46,10 @@ plot_file_prefix=$DATA_DIR/@DATA_TYPE@_data_plot_core
 if [ $run_benchmark -ne 0 ]; then
 	echo "Executing $benchmark_exec $argv"
 	$benchmark_exec $argv
+fi
+
+if [ $run_plot -eq 0 ]; then
+    exit 0
 fi
 
 
