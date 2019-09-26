@@ -24,9 +24,9 @@
 #ifndef SRC_BENCHMARK_CUSTOM_OUTPUTTER_H_
 #define SRC_BENCHMARK_CUSTOM_OUTPUTTER_H_
 
-#include "hayai/hayai_main.hpp"
-#include "hayai/hayai_outputter.hpp"
-#include "hayai/hayai_console.hpp"
+#include <hayai/hayai_main.hpp>
+#include <hayai/hayai_outputter.hpp>
+#include <hayai/hayai_console.hpp>
 
 
 /// Prints the result to standard output.

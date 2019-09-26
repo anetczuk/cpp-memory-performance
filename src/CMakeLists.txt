@@ -200,10 +200,14 @@ endfunction()
 ## ================= build =================
 
 
+set( EXTERNAL_LIBS "${CMAKE_SOURCE_DIR}/../libs" )
+
+
 include(ExternalProject)
 
-
 include_directories( . )
+include_directories( SYSTEM ${EXTERNAL_LIBS} )
+
 
 if( CMAKE_TESTING_ENABLED )
     ##

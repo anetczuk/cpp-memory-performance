@@ -24,7 +24,7 @@
 #ifndef SRC_BENCHMARK_BENCHMARK_TIME_H_
 #define SRC_BENCHMARK_BENCHMARK_TIME_H_
 
-#include "benchmark/hayai/hayai_clock.hpp"
+#include <hayai/hayai_clock.hpp>
 
 
 namespace benchmark {
