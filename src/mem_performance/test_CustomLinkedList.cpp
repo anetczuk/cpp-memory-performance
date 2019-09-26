@@ -10,11 +10,15 @@
 TEST(CustomLinkedList, listMemSize) {
     CustomLinkedList listA;
     listA.randomize();
-    EXPECT_EQ(20, listA.memSize());
+    /// on Intel: 40
+    /// on RPi: 20
+    EXPECT_GE(listA.memSize(), 20);
 
     CustomLinkedList listB(1);
     listB.randomize();
-    EXPECT_EQ(2012, listB.memSize());
+    /// on Intel: 2032
+    /// on RPi: 2012
+    EXPECT_GE(listB.memSize(), 2012);
 }
 
 TEST(CustomLinkedList, properHead) {
