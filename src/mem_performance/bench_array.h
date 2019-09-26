@@ -99,10 +99,10 @@ public:
 //		container = BType( logFunctor.maxSizeB, 1 );
 		const std::size_t listSize = calcContainerSize( logFunctor.maxSizeB );
 
-		std::vector<uint64_t> warmUp(listSize * 4, 1);
-		for(std::size_t i=0; i<warmUp.size(); ++i) {
-			warmUp[i] = i;
-		}
+//		std::vector<uint64_t> warmUp(listSize * 4, 1);
+//		for(std::size_t i=0; i<warmUp.size(); ++i) {
+//			warmUp[i] = i;
+//		}
 
 		container = BType( listSize, 1 );
 	}
