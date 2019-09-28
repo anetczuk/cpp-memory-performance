@@ -17,6 +17,16 @@ set( EXT_LIBS Threads::Threads )
 build_cpps( ${CURR_DIR_NAME} )
 
 
+## generate cachegrind scripts
+file(GLOB exec_files ${CMAKE_CURRENT_BINARY_DIR}/benchmark_*)
+foreach(single_exec ${exec_files})
+    get_filename_component( exec_name ${single_exec} NAME_WE)
+    set( GENERATOR_FILE "${CMAKE_SOURCE_DIR}/cachegrind.sh.in" )
+    set( EXECUTABLE "${exec_name}" )
+    configure_file( ${GENERATOR_FILE} "cachegrind_${exec_name}.sh" @ONLY )
+endforeach()
+
+
 ## copy plot script
 file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_all.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
 file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_config_single.gnu DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
