@@ -18,10 +18,14 @@ argv=$@
 
 run_benchmark=1
 run_plot=1
+priority=-1
 while test $# != 0; do
     case "$1" in
 	    --no-benchmark|-nb) run_benchmark=0;;
 	    --no-plot|-np)      run_plot=0 ;;
+        --priority)         priority="$2"
+                            shift
+                            ;;
 	    *)  ;;
     esac
     shift
@@ -33,7 +37,7 @@ cores_num=$(grep -c ^processor /proc/cpuinfo)
 echo "Detected cores: ${cores_num}"
 
 
-DATA_DIR="./data"
+DATA_DIR="$SCRIPT_DIR/data"
 
 mkdir -p $DATA_DIR
 
@@ -59,7 +63,7 @@ function ctrl_c() {
 }
 
 
-benchmark_exec=./benchmark_@BENCHMARK_TYPE@
+benchmark_exec=$SCRIPT_DIR/benchmark_@BENCHMARK_TYPE@
 raw_file_prefix=$DATA_DIR/@DATA_TYPE@_data_raw_proc
 plot_file_prefix=$DATA_DIR/@DATA_TYPE@_data_plot_proc
 
@@ -67,10 +71,21 @@ plot_file_prefix=$DATA_DIR/@DATA_TYPE@_data_plot_proc
 if [ $run_benchmark -ne 0 ]; then
 	echo "Generating data"
 	for i in $(seq 1 $cores_num); do
-	   echo "Starting benchmark $i: $benchmark_exec --memdiv $cores_num $argv"
-	   out_file=${raw_file_prefix}_${i}.txt
-	   $benchmark_exec --memdiv $cores_num $argv > $out_file &
-	   pids[${i}]=$!
+	    echo "Starting benchmark $i: $benchmark_exec --memdiv $cores_num $argv"
+	    out_file=${raw_file_prefix}_${i}.txt
+	   
+	    ## $benchmark_exec --memdiv $cores_num $argv > $out_file &
+        command=
+        if [ $priority -ne -1 ]; then
+            ## sudo is required for nice
+            command="sudo nice -$priority $benchmark_exec --memdiv $cores_num $argv"
+        else
+            command="$benchmark_exec --memdiv $cores_num $argv"
+        fi
+        echo "Executing: $command > $out_file &"
+        $command > $out_file &
+	   
+	    pids[${i}]=$!
 	done  
 
 	## wait for all pids

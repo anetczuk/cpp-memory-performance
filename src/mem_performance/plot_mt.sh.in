@@ -18,10 +18,14 @@ argv=$@
 
 run_benchmark=1
 run_plot=1
+priority=-1
 while test $# != 0; do
     case "$1" in
 	    --no-benchmark|-nb) run_benchmark=0 ;;
 	    --no-plot|-np)      run_plot=0 ;;
+        --priority)         priority="$2"
+                            shift
+                            ;;
 	    *)  ;;
     esac
     shift
@@ -33,19 +37,26 @@ cores_num=$(grep -c ^processor /proc/cpuinfo)
 echo "Detected cores: ${cores_num}"
 
 
-DATA_DIR="./data"
+DATA_DIR="$SCRIPT_DIR/data"
 
 mkdir -p $DATA_DIR
 
 
-benchmark_exec=./benchmark_@DATA_TYPE@
+benchmark_exec=$SCRIPT_DIR/benchmark_@DATA_TYPE@
 raw_file_prefix=$DATA_DIR/@DATA_TYPE@_data_raw_core
 plot_file_prefix=$DATA_DIR/@DATA_TYPE@_data_plot_core
 
 
 if [ $run_benchmark -ne 0 ]; then
-	echo "Executing $benchmark_exec $argv"
-	$benchmark_exec $argv
+    command=
+    if [ $priority -ne -1 ]; then
+        ## sudo is required for nice
+        command="sudo nice -$priority $benchmark_exec $argv"
+    else
+        command="$benchmark_exec $argv"
+    fi
+    echo "Executing: $command > $raw_data_file"
+    $command > $raw_data_file
 fi
 
 if [ $run_plot -eq 0 ]; then
