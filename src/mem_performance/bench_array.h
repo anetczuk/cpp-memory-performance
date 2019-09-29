@@ -78,7 +78,6 @@ public:
 			prevMemSize(0), expsNumber(0), container(),
 			DATA_SIZE( sizeof(typename BType::value_type) ), CONTAINER_SIZE( sizeof(BType) )
 	{
-		logFunctor.maxSizeB = (1024 + 256)*1024*1024L;
 		logFunctor.factor 	= 3.0;
 		logFunctor.itersmax = 10000;
 		logFunctor.minIters = 3;
@@ -92,12 +91,13 @@ public:
 	}
 
 	void initialize() {
-	    BUFFERED( std::cerr, "initializing memory, maxSizeB: " << logFunctor.maxSizeB << " (" << std::fixed << std::setw( 6 ) << ( double(logFunctor.maxSizeB) / (1024*1024*1024)) << " GB)" << std::endl );
+	    const uint64_t memSize = logFunctor.getMemorySize();
+	    BUFFERED( std::cerr, "initializing memory: " << memSize << " (" << std::fixed << std::setw( 6 ) << ( double(memSize) / (1024*1024*1024)) << " GB)" << std::endl );
 
 		expsNumber = logFunctor.experimentsNumber();
 
 //		container = BType( logFunctor.maxSizeB, 1 );
-		const std::size_t listSize = calcContainerSize( logFunctor.maxSizeB );
+		const std::size_t listSize = calcContainerSize( memSize );
 
 //		std::vector<uint64_t> warmUp(listSize * 4, 1);
 //		for(std::size_t i=0; i<warmUp.size(); ++i) {
@@ -108,15 +108,21 @@ public:
 	}
 
 	void parseArguments(int argc, char** argv) {
-		const long long mem = benchmark::get_param_maxmem(argc, argv);
-		if (mem < 1) {
-		    BUFFERED( std::cerr, "invalid maxmem argument\n" );
-			exit(1);
+		const long long strictmem = benchmark::get_param_mem(argc, argv);
+		if (strictmem > 0) {
+		    logFunctor.strictSizeB = strictmem;
+		} else {
+            const long long maxmem = benchmark::get_param_maxmem(argc, argv);
+            if (maxmem < 1) {
+                BUFFERED( std::cerr, "'mem' or 'maxmem' argument not given\n" );
+                exit(1);
+            }
+            logFunctor.maxSizeB = maxmem;
 		}
-		logFunctor.maxSizeB = mem;
+
 		const long long memdiv = benchmark::get_param_long(argc, argv, "memdiv");
 		if (memdiv > 0) {
-		    logFunctor.maxSizeB /= memdiv;
+		    logFunctor.divideMemory( memdiv );
 		}
 	}
 
@@ -124,14 +130,18 @@ public:
 		if (container.size() < 1) {
 			initialize();
 		}
-		benchmark::ContainerExperiment::run(expsNumber, outStream);
+		if (logFunctor.isStrictMem()) {
+		    benchmark::ContainerExperiment::runSingle(expsNumber, outStream);
+		} else {
+		    benchmark::ContainerExperiment::runRange(expsNumber, outStream);
+		}
 	}
 
 	benchmark::BenchResult experiment(const std::size_t experimentNo) override {
         const std::size_t memSizeB = logFunctor.calcMemSize(experimentNo);		// in Bytes
-
-	    if (memSizeB < CONTAINER_SIZE)
+	    if (memSizeB < CONTAINER_SIZE) {
 	        return benchmark::BenchResult();
+	    }
         if (memSizeB == prevMemSize) {
         	return benchmark::BenchResult();
         }

@@ -50,8 +50,7 @@ int main(int argc, char** argv) {
 		Worker& currWorker = workers.back();
 		currWorker.experiment.parseArguments(argc, argv);
 
-		uint64_t& memsize = currWorker.experiment.logFunctor.maxSizeB;
-		memsize /= nthreads;
+		currWorker.experiment.logFunctor.divideMemory( nthreads );
 	}
 
 	Worker::runAll( workers );

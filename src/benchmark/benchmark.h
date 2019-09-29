@@ -66,7 +66,33 @@ namespace benchmark {
     	virtual BenchResult experiment(const std::size_t experimentNo) = 0;
 
 
-    	void run(const std::size_t experimentsNumber, std::ostream& outStream = std::cout) {
+    	void runSingle(const std::size_t experimentNumber, std::ostream& outStream = std::cout) {
+            /// warm up
+            BUFFERED( std::cerr, "warming up" << std::endl );
+            experiment(experimentNumber-1);
+
+            const BenchResult data = experiment(experimentNumber);
+
+            if (data.valid == false) {
+                return;
+            }
+
+            const std::size_t iters = data.iterations;
+            const std::size_t listSize = data.containerSize;
+            const std::size_t memSize = data.memSize;
+            const uint64_t duration = data.duration;
+            const double timePerIter = double(duration) / iters;
+            const double timePerElem = timePerIter / listSize;
+
+            const std::string memHuman = humanMemSize(memSize);
+
+            BUFFERED( std::cerr, std::fixed << experimentNumber << " iters: " << iters << " repeats: " << data.repeats << " memory: " << memSize << " B " << memHuman << std::endl );
+
+            BUFFERED( outStream, std::fixed << memSize << " B " << memHuman << " " );
+            BUFFERED( outStream, std::fixed << "time/iter: " << timePerIter << " ns time/item: " << timePerElem << " ns iters: " << iters << " items: " << listSize << std::endl );
+    	}
+
+    	void runRange(const std::size_t experimentsNumber, std::ostream& outStream = std::cout) {
 			/// warm up
     	    BUFFERED( std::cerr, "warming up" << std::endl );
 			experiment(experimentsNumber);

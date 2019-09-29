@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
 	ListExperiment<CustomLinkedList> experiment;
 	experiment.logFunctor.maxSizeB = 72*1024*1024;
 	experiment.parseArguments(argc, argv);
-	experiment.logFunctor.maxSizeB /= 8;
+	experiment.logFunctor.divideMemory( 8 );
 	experiment.run();
     return 0;
 }

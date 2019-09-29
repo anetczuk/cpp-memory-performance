@@ -32,6 +32,7 @@ namespace benchmark {
     class LogExperimentFunctor {
     public:
 
+        uint64_t strictSizeB;
         uint64_t maxSizeB;
         double factor;
         double decay;
@@ -40,9 +41,31 @@ namespace benchmark {
         std::size_t minIters;
 
 
-        LogExperimentFunctor(const std::size_t maxMemSizeB = 1*1024*1024*1024, const double factor = 4, const std::size_t itersmax = 10000000):
-                maxSizeB(maxMemSizeB), factor(factor), decay(10.0), itersmax(itersmax), minSize(0), minIters(1)
+        LogExperimentFunctor(const double factor = 4, const std::size_t itersmax = 10000000):
+                strictSizeB(0), maxSizeB(0),
+                factor(factor), decay(10.0), itersmax(itersmax), minSize(0), minIters(1)
         {
+        }
+
+        bool isStrictMem() const {
+            return (strictSizeB > 0);
+        }
+
+        uint64_t getMemorySize() const {
+            if (strictSizeB > 0)
+                return strictSizeB;
+            return maxSizeB;
+        }
+
+        uint64_t getMemoryOffset() const {
+            if (strictSizeB > 0)
+                return 0;
+            return minSize;
+        }
+
+        void divideMemory(const std::size_t divider) {
+            strictSizeB /= divider;
+            maxSizeB /= divider;
         }
 
         void calcDecay() {
@@ -69,18 +92,25 @@ namespace benchmark {
             // size = 2^(i/f)
             // log2(size) = i/f
             // i = f * log2(size)
-            if (maxSizeB < minSize)
-                return 0;
-            const uint64_t mem = maxSizeB - minSize;
-            if (mem == 0)
+
+            uint64_t mem = 0;
+            if (strictSizeB > 0) {
+                mem = strictSizeB;
+            } else {
+                if (maxSizeB < minSize)
+                    return 0;
+                mem = maxSizeB - minSize;
+            }
+            if (mem < 1)
                 return 0;
             const std::size_t iternum = factor * std::log2( mem );
             return iternum;
         }
 
         std::size_t calcMemSize(const std::size_t experiment) {
+            const uint64_t memoffset = getMemoryOffset();
             const std::size_t currSize = std::pow(2, double(experiment) / factor);   // in Bytes
-            return currSize + minSize;
+            return currSize + memoffset;
         }
 
         std::size_t calcItersNumber(const std::size_t experiment) {

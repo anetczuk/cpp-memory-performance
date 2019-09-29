@@ -61,60 +61,74 @@ namespace benchmark {
 		return nullptr;
 	}
 
+    long long parse_memory_param(const std::string& data) {
+        const std::size_t chNum = data.length();
+        long long unitMuliplier = 1;
+        double value = -1.0;
+        const char unit = data[ chNum-1 ];
+        switch(unit) {
+        case 'B': {
+            const std::string strnum = data.substr(0, chNum-1);
+            value = std::stod( strnum );
+            break;
+        }
+        case 'K': {
+            unitMuliplier = 1024;
+            const std::string strnum = data.substr(0, chNum-1);
+            value = std::stod( strnum );
+            break;
+        }
+        case 'M': {
+            unitMuliplier = 1024*1024;
+            const std::string strnum = data.substr(0, chNum-1);
+            value = std::stod( strnum );
+            break;
+        }
+        case 'G': {
+            unitMuliplier = 1024*1024*1024;
+            const std::string strnum = data.substr(0, chNum-1);
+            value = std::stod( strnum );
+            break;
+        }
+        default: {
+            /// no unit
+            value = std::stod( data );
+            break;
+        }
+        }
+        if (value < 0.0) {
+            BUFFERED( std::cerr, "could not parse data: '" << data << "'\n" );
+            return -1;
+        }
+        long long memsize = value * unitMuliplier;
+        if (memsize < 1) {
+            return -1;
+        }
+        return memsize;
+    }
+
+	long long get_param_mem(int argc, char** argv) {
+        const char* maxMem = get_param("mem", argc, argv);
+        if (maxMem == nullptr) {
+            return -1;
+        }
+        const std::string data(maxMem);
+        if (data.empty()) {
+            return -1;
+        }
+        return parse_memory_param(data);
+	}
+
 	long long get_param_maxmem(int argc, char** argv) {
 		const char* maxMem = get_param("maxmem", argc, argv);
 		if (maxMem == nullptr) {
-		    BUFFERED( std::cerr, "'maxmem' not given\n" );
 			return -1;
 		}
 		const std::string data(maxMem);
-		const std::size_t chNum = data.length();
-		if (chNum < 1) {
-		    BUFFERED( std::cerr, "'maxmem' empty\n" );
+		if (data.empty()) {
 			return -1;
 		}
-		long long unitMuliplier = 1;
-		double value = -1.0;
-		const char unit = maxMem[ chNum-1 ];
-		switch(unit) {
-		case 'B': {
-		    const std::string strnum = data.substr(0, chNum-1);
-			value = std::stod( strnum );
-			break;
-		}
-		case 'K': {
-			unitMuliplier = 1024;
-            const std::string strnum = data.substr(0, chNum-1);
-            value = std::stod( strnum );
-			break;
-		}
-		case 'M': {
-			unitMuliplier = 1024*1024;
-            const std::string strnum = data.substr(0, chNum-1);
-            value = std::stod( strnum );
-			break;
-		}
-		case 'G': {
-			unitMuliplier = 1024*1024*1024;
-            const std::string strnum = data.substr(0, chNum-1);
-            value = std::stod( strnum );
-			break;
-		}
-		default: {
-			/// no unit
-			value = std::stod( data );
-			break;
-		}
-		}
-		if (value < 0.0) {
-		    BUFFERED( std::cerr, "could not parse 'maxmem' argument: '" << data << "'\n" );
-			return -1;
-		}
-		long long memsize = value * unitMuliplier;
-		if (memsize < 1) {
-			return -1;
-		}
-		return memsize;
+		return parse_memory_param(data);
 	}
 
 	long long get_param_long(int argc, char** argv, const std::string& param) {
