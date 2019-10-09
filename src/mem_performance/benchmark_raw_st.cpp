@@ -28,22 +28,12 @@
 #include "benchmark/benchmark_params.h"
 #include "benchmark/benchmark_log.h"
 
+#include "unroll.h"
 #include "array.h"
 
 
 static const std::size_t BASE    = 16;
 static const std::size_t STEPS   = 2;
-
-#ifdef __clang__
-    /// for clang
-    #pragma message("clang detected")
-    static const std::size_t UNROLL  = 1;
-#elif defined __GNUC__
-    /// for GCC
-    #pragma message("GCC detected: loop unrolled")
-    static const std::size_t UNROLL  = 16;
-#endif
-
 static const std::size_t repeats = 25;
 static const std::size_t DIV     = std::pow(2, STEPS-1);
 
