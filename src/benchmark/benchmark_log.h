@@ -120,6 +120,30 @@ namespace benchmark {
             return std::max( minIters, iters );
         }
 
+        std::size_t calcItersNumber(const std::size_t listSize, const std::size_t itersNum) {
+            /// accesses = listSize * repeats * iters
+            /// iters = accesses / listSize * repeats
+            ///static const std::size_t access_num = 500000000;
+            std::size_t repeats = 500000000;
+            repeats /= listSize;
+            repeats /= itersNum;
+            if (repeats < 5)
+                return 5;
+            return repeats;
+        }
+
+        static std::size_t calcLog(const std::size_t maxListSize, const std::size_t base, const double step) {
+            /// base * step^x <= maxListSize
+            /// log(base * step^x) <= log(maxListSize)
+            /// log(base) + log(step^x) <= log(maxListSize)
+            /// x*log(step) <= log(maxListSize) - log(base)
+            /// x <= [log(maxListSize) - log(base)] / log(step)
+            const double mamLog = std::log2( maxListSize );
+            const double baseLog = std::log2( base );
+            const double stepLog = std::log2( step );
+            return (mamLog - baseLog) / stepLog;
+        }
+
     };
 
 }

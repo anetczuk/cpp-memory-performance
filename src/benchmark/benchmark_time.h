@@ -24,6 +24,8 @@
 #ifndef SRC_BENCHMARK_BENCHMARK_TIME_H_
 #define SRC_BENCHMARK_BENCHMARK_TIME_H_
 
+#include <chrono>                       // for high_resolution_clock
+
 #include <hayai/hayai_clock.hpp>
 
 
@@ -31,7 +33,18 @@ namespace benchmark {
 
 	using ::hayai::Clock;
 
+	//auto start = std::chrono::high_resolution_clock::now();
+	//auto finish = std::chrono::high_resolution_clock::now();
+	//std::chrono::duration<double> elapsed = finish - start;
+
 }
+
+
+//#define MEASURE_TIME()          benchmark::Clock::Now()
+//#define DURATION(start, end)    benchmark::Clock::Duration(start, end)
+
+#define MEASURE_TIME()          std::chrono::high_resolution_clock::now()
+#define DURATION(start, end)    std::chrono::nanoseconds(end - start).count()
 
 
 #endif /* SRC_BENCHMARK_BENCHMARK_TIME_H_ */

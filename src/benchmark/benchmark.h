@@ -63,15 +63,12 @@ namespace benchmark {
     	virtual ~ContainerExperiment() {
     	}
 
-    	virtual BenchResult experiment(const std::size_t experimentNo) = 0;
-
-
     	void runSingle(const std::size_t experimentNumber, std::ostream& outStream = std::cout) {
             /// warm up
             BUFFERED( std::cerr, "warming up" << std::endl );
-            experiment(experimentNumber-1);
+            executeExperiment(experimentNumber-1);
 
-            const BenchResult data = experiment(experimentNumber);
+            const BenchResult data = executeExperiment(experimentNumber);
 
             if (data.valid == false) {
                 return;
@@ -94,11 +91,12 @@ namespace benchmark {
 
     	void runRange(const std::size_t experimentsNumber, std::ostream& outStream = std::cout) {
 			/// warm up
-    	    BUFFERED( std::cerr, "warming up" << std::endl );
-			experiment(experimentsNumber);
+//    	    BUFFERED( std::cerr, "warming up" << std::endl );
+//    	    executeExperiment(experimentsNumber);
 
             for(std::size_t i=0; i<=experimentsNumber; ++i) {
-                const BenchResult data = experiment(i);
+//            for(std::size_t i=experimentsNumber-1; i<experimentsNumber; --i) {
+                const BenchResult data = executeExperiment(i);
 
                 if (data.valid == false)
                     continue;
@@ -118,6 +116,11 @@ namespace benchmark {
                 BUFFERED( outStream, std::fixed << "time/iter: " << timePerIter << " ns time/item: " << timePerElem << " ns iters: " << iters << " items: " << listSize << std::endl );
             }
     	}
+
+
+    protected:
+
+    	virtual BenchResult executeExperiment(const std::size_t experimentNo) = 0;
 
     };
 

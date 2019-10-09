@@ -126,7 +126,7 @@ public:
         }
 	}
 
-	benchmark::BenchResult experiment(const std::size_t experimentNo) override {
+	benchmark::BenchResult executeExperiment(const std::size_t experimentNo) override {
         const std::size_t memSizeB = logFunctor.calcMemSize(experimentNo);		// in Bytes
 
 	    if (memSizeB < CONTAINER_SIZE)
