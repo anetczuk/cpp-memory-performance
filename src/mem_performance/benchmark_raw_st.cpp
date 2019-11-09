@@ -29,7 +29,7 @@
 #include "benchmark/benchmark_log.h"
 
 #include "unroll.h"
-#include "array.h"
+#include "Array.h"
 
 
 static const std::size_t BASE    = 16;

@@ -34,7 +34,7 @@
 #include "benchmark/benchmark_params.h"
 
 #include "unroll.h"
-#include "array.h"
+#include "Array.h"
 
 
 template<typename Type>
