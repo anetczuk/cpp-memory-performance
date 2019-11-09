@@ -26,46 +26,127 @@
 
 #include <iostream>
 #include <iomanip>
+#include <limits>
 
 #include "benchmark/benchmark.h"
 #include "benchmark/benchmark_log.h"
 #include "benchmark/benchmark_time.h"
 #include "benchmark/benchmark_params.h"
 
+#include "unroll.h"
 #include "array.h"
 
 
-template <typename BType>
-inline uint64_t bench_iteration(const typename BType::value_type* list, const std::size_t listSize, const std::size_t itersnum) {
-	benchmark::Clock::TimePoint startTime, endTime;
-	typename BType::value_type sum = 0;
-	startTime = benchmark::Clock::Now();
+template<typename Type>
+inline uint64_t iterate_1(const Type* container, const std::size_t listSize, const std::size_t itersnum) {
+    Type sum = 0;
 
-	for(std::size_t i = 0; i<itersnum; ++i) {
-		std::size_t x = 0;
-		for(; x<listSize; ++x) {
-			sum += list[x];
-		}
-	}
+    auto startTime = MEASURE_TIME();
 
-	endTime = benchmark::Clock::Now();
-	if ( sum != listSize*itersnum )  {
-	    BUFFERED( std::cerr, "internal error" << std::endl );
-		exit(1);
-	}
-	const uint64_t duration = benchmark::Clock::Duration(startTime, endTime);
-	return duration;
+//    ///
+//    const std::size_t acc_num = itersnum * listSize;
+//    std::size_t x = 0;
+//    for(std::size_t i=0; i<acc_num; ++i) {
+//        if ( x == listSize)
+//            x = 0;
+//        sum += container[ x ];
+//        ++x;
+//    }
+
+//    ///
+//    const std::size_t acc_num = itersnum * listSize;
+//    for(std::size_t i=0; i<acc_num; ++i) {
+//        sum += container[ i % listSize ];
+//    }
+
+    ///
+    for(std::size_t i=0; i<itersnum; ++i) {
+        for(std::size_t x=0; x<listSize; ++x) {
+            sum += container[x];
+        }
+    }
+
+    auto endTime = MEASURE_TIME();
+    if ( sum != 0 )  {
+        std::cerr << "internal error -- sum error" << std::endl;
+        exit(1);
+    }
+
+    return DURATION(startTime, endTime);
 }
+
+template<typename Type>
+inline uint64_t iterate_16(const Type* container, const std::size_t listSize, const std::size_t itersnum) {
+    const std::size_t listLimit = listSize-16;          /// prevents array out of bound
+    if (listLimit > listSize) {
+        /// invalid state -- unsigned overflow
+        return -1;
+    }
+    Type sum = 0;
+
+    auto startTime = MEASURE_TIME();
+
+    for(std::size_t i=0; i<itersnum; ++i) {
+        for(std::size_t x=0; x<=listLimit; x+=16) {
+            sum += container[x];
+            sum += container[x+1];
+            sum += container[x+2];
+            sum += container[x+3];
+            sum += container[x+4];
+            sum += container[x+5];
+            sum += container[x+6];
+            sum += container[x+7];
+
+            sum += container[x+ 9];
+            sum += container[x+10];
+            sum += container[x+11];
+            sum += container[x+12];
+            sum += container[x+13];
+            sum += container[x+14];
+            sum += container[x+15];
+        }
+    }
+
+    auto endTime = MEASURE_TIME();
+    if ( sum != 0 )  {
+        std::cerr << "internal error -- sum error" << std::endl;
+        exit(1);
+    }
+
+    return DURATION(startTime, endTime);
+}
+
+
+template<typename Type, int S>
+struct trait {
+    static uint64_t iterate(const Type* container, const std::size_t listSize, const std::size_t itersnum);
+};
+
+template<typename Type>
+struct trait<Type, 1> {
+    static uint64_t iterate(const Type* container, const std::size_t listSize, const std::size_t itersnum) {
+        return iterate_1(container, listSize, itersnum);
+    }
+};
+
+template<typename Type>
+struct trait<Type, 16> {
+    static uint64_t iterate(const Type* container, const std::size_t listSize, const std::size_t itersnum) {
+        return iterate_16(container, listSize, itersnum);
+    }
+};
+
+
+// ================================================================================
 
 
 template <typename BType>
 class VectorExperiment: public benchmark::ContainerExperiment {
 public:
 
-	benchmark::LogExperimentFunctor logFunctor;
-	double avgProbesFactor;
-	std::size_t avgProbesMin;
-	std::size_t prevMemSize;
+    typedef typename BType::value_type InnerType;
+
+	benchmark::LogExperimentFunctor2 logFunctor;
 	std::size_t expsNumber;
 	BType container;
 
@@ -74,17 +155,10 @@ public:
 
 
 	VectorExperiment(): benchmark::ContainerExperiment(),
-			logFunctor(), avgProbesFactor(0.0), avgProbesMin(1),
-			prevMemSize(0), expsNumber(0), container(),
-			DATA_SIZE( sizeof(typename BType::value_type) ), CONTAINER_SIZE( sizeof(BType) )
+			logFunctor(),
+			expsNumber(0), container(),
+			DATA_SIZE( sizeof(InnerType) ), CONTAINER_SIZE( sizeof(BType) )
 	{
-		logFunctor.factor 	= 3.0;
-		logFunctor.itersmax = 10000;
-		logFunctor.minIters = 3;
-		logFunctor.decay 	= 10000.0;
-
-		avgProbesFactor = 50;
-		avgProbesMin = 5;
 	}
 
 	~VectorExperiment() override {
@@ -92,19 +166,13 @@ public:
 
 	void initialize() {
 	    const uint64_t memSize = logFunctor.getMemorySize();
-	    BUFFERED( std::cerr, "initializing memory: " << memSize << " (" << std::fixed << std::setw( 6 ) << ( double(memSize) / (1024*1024*1024)) << " GB)" << std::endl );
 
-		expsNumber = logFunctor.experimentsNumber();
-
-//		container = BType( logFunctor.maxSizeB, 1 );
 		const std::size_t listSize = calcContainerSize( memSize );
 
-//		std::vector<uint64_t> warmUp(listSize * 4, 1);
-//		for(std::size_t i=0; i<warmUp.size(); ++i) {
-//			warmUp[i] = i;
-//		}
+	    BUFFERED( std::cerr, "initializing memory: " << memSize << " (" << std::fixed << std::setw( 6 ) << ( double(memSize) / (1024*1024*1024)) << " GB), container size: " << listSize << std::endl );
 
-		container = BType( listSize, 1 );
+		expsNumber = benchmark::LogExperimentFunctor::calcLog(listSize, BASE, DIV) + 1;
+		container = BType( listSize, 0 );
 	}
 
 	void parseArguments(int argc, char** argv) {
@@ -137,34 +205,24 @@ public:
 		}
 	}
 
-	benchmark::BenchResult executeExperiment(const std::size_t experimentNo) override {
-        const std::size_t memSizeB = logFunctor.calcMemSize(experimentNo);		// in Bytes
-	    if (memSizeB < CONTAINER_SIZE) {
-	        return benchmark::BenchResult();
-	    }
-        if (memSizeB == prevMemSize) {
-        	return benchmark::BenchResult();
-        }
-        prevMemSize = memSizeB;
+	benchmark::BenchResult executeExperiment(const std::size_t experimentNo, const std::size_t listSize) override {
+	    const std::size_t maxListSize = container.size();
+	    const std::size_t containerSize = std::min( maxListSize, listSize );
 
-	    const std::size_t listSize = calcContainerSize( memSizeB );
-	    if (listSize < 8)
-	        return benchmark::BenchResult();
+	    const double iterFactor = 3.0 * experimentNo / expsNumber + 1;
+	    const std::size_t itersNum = iterFactor * maxListSize / containerSize + 1;
 
-        const std::size_t itersnum = logFunctor.calcItersNumber(experimentNo);
+	    const InnerType* list = container.data();
 
-	    const double avgFactor = 1.0 - double(experimentNo) / expsNumber;		// [1..0]
-	    const std::size_t avgProbes = avgFactor * avgProbesFactor + avgProbesMin;
-	    uint64_t minVal = -1;
-
-	    const typename BType::value_type* list = container.data();
-
-	    for(std::size_t x = 0; x<avgProbes; ++x) {
-	    	const uint64_t duration = bench_iteration<BType>(list, listSize, itersnum);
-	    	minVal = std::min(minVal, duration);
+	    uint64_t bestDur = -1;
+	    for(std::size_t r=0; r<repeats; ++r) {
+	        const uint64_t dur = trait<InnerType, UNROLL>::iterate(list, containerSize, itersNum);
+	        if (dur < bestDur)
+	            bestDur = dur;
 	    }
 
-	    return benchmark::BenchResult(itersnum, avgProbes, listSize, memSizeB, minVal);
+	    const std::size_t memSizeB = containerSize * DATA_SIZE + CONTAINER_SIZE;
+	    return benchmark::BenchResult(itersNum, repeats, containerSize, memSizeB, bestDur);
 	}
 
 	std::size_t calcContainerSize( const std::size_t memSizeB ) const {

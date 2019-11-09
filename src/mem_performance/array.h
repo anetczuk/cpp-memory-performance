@@ -39,8 +39,8 @@ struct Array {
 		init(0, 1);
 	}
 
-	Array(const std::size_t size, const value_type initVal): raw_data(nullptr), data_size(0) {
-		init(size, initVal);
+	Array(const std::size_t containerSize, const value_type initVal): raw_data(nullptr), data_size(0) {
+		init(containerSize, initVal);
 	}
 
 	~Array() {
@@ -55,13 +55,15 @@ struct Array {
 	    release();
 	    Array* obj = const_cast<Array*>(&object);
 	    raw_data = obj->raw_data;
+	    data_size = obj->data_size;
 	    obj->raw_data = nullptr;
+	    obj->data_size = 0;
 	    return * this;
 	}
 
-	void init(const std::size_t size, const value_type initVal) {
+	void init(const std::size_t containerSize, const value_type initVal) {
 		release();
-		data_size = size;
+		data_size = containerSize;
 		raw_data = new value_type[data_size];
 		for(std::size_t i=0; i<data_size; ++i) {
 			raw_data[i] = initVal;

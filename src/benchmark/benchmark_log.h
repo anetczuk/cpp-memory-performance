@@ -132,16 +132,48 @@ namespace benchmark {
             return repeats;
         }
 
-        static std::size_t calcLog(const std::size_t maxListSize, const std::size_t base, const double step) {
-            /// base * step^x <= maxListSize
-            /// log(base * step^x) <= log(maxListSize)
-            /// log(base) + log(step^x) <= log(maxListSize)
-            /// x*log(step) <= log(maxListSize) - log(base)
-            /// x <= [log(maxListSize) - log(base)] / log(step)
-            const double mamLog = std::log2( maxListSize );
-            const double baseLog = std::log2( base );
-            const double stepLog = std::log2( step );
-            return (mamLog - baseLog) / stepLog;
+        static std::size_t calcLog(const std::size_t maxListSize, const std::size_t base, const std::size_t div) {
+            /// maxListSize = BASE * mul / DIV * (DIV + mod)
+            /// maxListSize = BASE * mul / DIV * (DIV + i % DIV)
+            /// maxListSize = BASE * std::pow(2, exp) / DIV * (DIV + i % DIV)
+            /// maxListSize / BASE * DIV / (DIV + i % DIV) = std::pow(2, exp)
+            /// maxListSize / BASE * DIV / DIV > std::pow(2, exp)
+            /// maxListSize / BASE > std::pow(2, exp)
+            /// log( maxListSize / BASE ) > exp
+            /// log( maxListSize / BASE ) > maxiter / DIV
+            /// log( maxListSize / BASE ) * DIV > maxiter
+            /// maxiter < log( maxListSize / BASE ) * DIV
+
+            const std::size_t maxiters = std::log2( maxListSize / base ) * div;
+            return maxiters;
+        }
+
+    };
+
+
+    class LogExperimentFunctor2 {
+    public:
+
+        uint64_t strictSizeB;
+        uint64_t maxSizeB;
+
+
+        LogExperimentFunctor2(): strictSizeB(0), maxSizeB(0) {
+        }
+
+        bool isStrictMem() const {
+            return (strictSizeB > 0);
+        }
+
+        uint64_t getMemorySize() const {
+            if (strictSizeB > 0)
+                return strictSizeB;
+            return maxSizeB;
+        }
+
+        void divideMemory(const std::size_t divider) {
+            strictSizeB /= divider;
+            maxSizeB /= divider;
         }
 
     };

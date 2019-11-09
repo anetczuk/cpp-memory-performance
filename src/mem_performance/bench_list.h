@@ -34,8 +34,7 @@
 
 template <typename BType>
 inline uint64_t bench_iteration(const typename BType::value_type* list, const std::size_t listSize, const std::size_t itersnum) {
-	benchmark::Clock::TimePoint startTime, endTime;
-	startTime = benchmark::Clock::Now();
+	auto startTime = MEASURE_TIME();
 
 	for(std::size_t i = 0; i<itersnum; ++i) {
 		const typename BType::value_type* elem = list;
@@ -50,9 +49,8 @@ inline uint64_t bench_iteration(const typename BType::value_type* list, const st
 		}
 	}
 
-	endTime = benchmark::Clock::Now();
-	const uint64_t duration = benchmark::Clock::Duration(startTime, endTime);
-	return duration;
+	auto endTime = MEASURE_TIME();
+	return DURATION(startTime, endTime);
 }
 
 
@@ -60,41 +58,34 @@ template <typename BType>
 class ListExperiment: public benchmark::ContainerExperiment {
 public:
 
-	benchmark::LogExperimentFunctor logFunctor;
-	double avgProbesFactor;
-	std::size_t avgProbesMin;
-	std::size_t prevMemSize;
+	benchmark::LogExperimentFunctor2 logFunctor;
 	std::size_t expsNumber;
+	BType container;
 
 	std::size_t DATA_SIZE;
 	std::size_t CONTAINER_SIZE;
-	bool initialized;
 
 
 	ListExperiment(): benchmark::ContainerExperiment(),
-			logFunctor(), avgProbesFactor(0.0), avgProbesMin(1),
-			prevMemSize(0), expsNumber(0),
-			DATA_SIZE( sizeof(typename BType::value_type) ), CONTAINER_SIZE( sizeof(BType) ),
-			initialized( false )
+			logFunctor(),
+			expsNumber(0), container(),
+			DATA_SIZE( sizeof(typename BType::value_type) ), CONTAINER_SIZE( sizeof(BType) )
 	{
-		logFunctor.factor 	= 3.0;
-		logFunctor.itersmax = 10000;
-		logFunctor.minIters = 3;
-		logFunctor.decay 	= 10000.0;
-
-		avgProbesFactor = 50;
-		avgProbesMin = 5;
 	}
 
 	~ListExperiment() override {
 	}
 
 	void initialize() {
-		expsNumber = logFunctor.experimentsNumber();
-		initialized = true;
-		const uint64_t memSize = logFunctor.getMemorySize();
-		BUFFERED( std::cerr, "initializing memory: " << memSize << " (" << std::fixed << std::setw( 6 ) << ( double(memSize) / (1024*1024*1024)) << " GB)" << std::endl );
-		BUFFERED( std::cerr, "experiments number: " << expsNumber << std::endl );
+	    const uint64_t memSize = logFunctor.getMemorySize();
+
+		const std::size_t listSize = calcContainerSize( memSize );
+
+	    BUFFERED( std::cerr, "initializing memory: " << memSize << " (" << std::fixed << std::setw( 6 ) << ( double(memSize) / (1024*1024*1024)) << " GB), container size: " << listSize << std::endl );
+
+		expsNumber = benchmark::LogExperimentFunctor::calcLog(listSize, BASE, DIV) + 1;
+		container = BType( listSize );
+		container.randomize();
 	}
 
 	void parseArguments(int argc, char** argv) {
@@ -117,8 +108,9 @@ public:
 	}
 
 	void run(std::ostream& outStream = std::cout) {
-		if (initialized == false)
+		if (container.size() < 1) {
 			initialize();
+		}
         if (logFunctor.isStrictMem()) {
             benchmark::ContainerExperiment::runSingle(expsNumber, outStream);
         } else {
@@ -126,37 +118,24 @@ public:
         }
 	}
 
-	benchmark::BenchResult executeExperiment(const std::size_t experimentNo) override {
-        const std::size_t memSizeB = logFunctor.calcMemSize(experimentNo);		// in Bytes
+    benchmark::BenchResult executeExperiment(const std::size_t experimentNo, const std::size_t listSize) override {
+        const std::size_t maxListSize = container.size();
+        const std::size_t containerSize = std::min( maxListSize, listSize );
 
-	    if (memSizeB < CONTAINER_SIZE)
-	        return benchmark::BenchResult();
-        if (memSizeB == prevMemSize) {
-        	return benchmark::BenchResult();
-        }
-        prevMemSize = memSizeB;
+	    const double iterFactor = 3.0 * experimentNo / expsNumber + 1;
+	    const std::size_t itersNum = iterFactor * maxListSize / containerSize + 1;
 
-        const std::size_t listSize = calcContainerSize( memSizeB );
-	    if (listSize < 8)
-	        return benchmark::BenchResult();
+	    const typename BType::value_type* list = container.data();
 
-	    BType dataContainer = BType( listSize );
-	    dataContainer.randomize();
-
-        const std::size_t itersnum = logFunctor.calcItersNumber(experimentNo);
-
-	    const double avgFactor = 1.0 - double(experimentNo) / expsNumber;		// [1..0]
-	    const std::size_t avgProbes = avgFactor * avgProbesFactor + avgProbesMin;
-	    uint64_t minVal = -1;
-
-	    const typename BType::value_type* list = dataContainer.data();
-
-	    for(std::size_t x = 0; x<avgProbes; ++x) {
-	    	const uint64_t duration = bench_iteration<BType>(list, listSize, itersnum);
-	    	minVal = std::min(minVal, duration);
+	    uint64_t bestDur = -1;
+	    for(std::size_t r=0; r<repeats; ++r) {
+	        const uint64_t dur = bench_iteration<BType>(list, containerSize, itersNum);
+	        if (dur < bestDur)
+	            bestDur = dur;
 	    }
 
-	    return benchmark::BenchResult(itersnum, avgProbes, listSize, memSizeB, minVal);
+	    const std::size_t memSizeB = containerSize * DATA_SIZE + CONTAINER_SIZE;
+	    return benchmark::BenchResult(itersNum, repeats, containerSize, memSizeB, bestDur);
 	}
 
 	std::size_t calcContainerSize( const std::size_t memSizeB ) const {

@@ -241,7 +241,6 @@ void singleLoop(const StdVector& vector, const std::size_t listSize, const std::
     const std::size_t currMemSize = listSize * sizeof( StdVector::value_type ) + sizeof( StdVector );
     std::cout << std::fixed << currMemSize << " B " << "0 B" << " ";
     std::cout << std::fixed << "time/iter: " << timePerIter << " ns time/item: " << timePerElem << " ns iters: " << itersNum << " items: " << listSize << std::endl;
-
 }
 
 
@@ -260,17 +259,7 @@ int main(int argc, char** argv) {
 	const std::size_t maxListSize = memSizeB / sizeof( StdVector::value_type );
 	StdVector vector(maxListSize, 0);
 
-	/// maxListSize = BASE * mul / DIV * (DIV + mod)
-	/// maxListSize = BASE * mul / DIV * (DIV + i % DIV)
-	/// maxListSize = BASE * std::pow(2, exp) / DIV * (DIV + i % DIV)
-	/// maxListSize / BASE * DIV / (DIV + i % DIV) = std::pow(2, exp)
-	/// maxListSize / BASE * DIV / DIV > std::pow(2, exp)
-	/// maxListSize / BASE > std::pow(2, exp)
-	/// log( maxListSize / BASE ) > exp
-	/// log( maxListSize / BASE ) > maxiter / DIV
-	/// log( maxListSize / BASE ) * DIV > maxiter
-	/// maxiter < log( maxListSize / BASE ) * DIV
-	const std::size_t maxiters = std::log2( maxListSize / BASE ) * DIV + 1;
+	const std::size_t maxiters = benchmark::LogExperimentFunctor::calcLog(maxListSize, BASE, DIV) + 1;
 
 	for(std::size_t i=START; i<maxiters; ++i) {
 	    const std::size_t exp  = i / DIV;

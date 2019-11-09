@@ -25,8 +25,21 @@
 #define SRC_BENCHMARK_H_
 
 #include <iostream>
+#include <cmath>
 
 #include "benchmark_print.h"
+
+
+// ================================================================================
+
+
+static const std::size_t BASE    = 16;                          /// for list size
+static const std::size_t STEPS   = 2;
+static const std::size_t DIV     = std::pow(2, STEPS-1);        /// list size divider
+static const std::size_t repeats = 50;                          /// number of repeats per experiment
+
+
+// ================================================================================
 
 
 namespace benchmark {
@@ -92,7 +105,7 @@ namespace benchmark {
     	void runRange(const std::size_t experimentsNumber, std::ostream& outStream = std::cout) {
 			/// warm up
 //    	    BUFFERED( std::cerr, "warming up" << std::endl );
-//    	    executeExperiment(experimentsNumber);
+    	    executeExperiment(6);
 
             for(std::size_t i=0; i<=experimentsNumber; ++i) {
 //            for(std::size_t i=experimentsNumber-1; i<experimentsNumber; --i) {
@@ -110,7 +123,7 @@ namespace benchmark {
 
                 const std::string memHuman = humanMemSize(memSize);
 
-                BUFFERED( std::cerr, std::fixed << i << "/" << experimentsNumber << " iters: " << iters << " repeats: " << data.repeats << " memory: " << memSize << " B " << memHuman << std::endl );
+                BUFFERED( std::cerr, std::fixed << i << "/" << experimentsNumber << " listSize: " << listSize << " iters: " << iters << " repeats: " << data.repeats << " memory: " << memSize << " B " << memHuman << std::endl );
 
                 BUFFERED( outStream, std::fixed << memSize << " B " << memHuman << " " );
                 BUFFERED( outStream, std::fixed << "time/iter: " << timePerIter << " ns time/item: " << timePerElem << " ns iters: " << iters << " items: " << listSize << std::endl );
@@ -120,7 +133,16 @@ namespace benchmark {
 
     protected:
 
-    	virtual BenchResult executeExperiment(const std::size_t experimentNo) = 0;
+    	virtual BenchResult executeExperiment(const std::size_t experimentNo) {
+            const std::size_t exp = experimentNo / DIV;
+            const std::size_t mod = experimentNo % DIV;
+            const std::size_t mul = std::pow(2, exp);
+            const std::size_t listSize = BASE * mul / DIV * (DIV + mod);
+
+            return executeExperiment(experimentNo, listSize);
+    	}
+
+    	virtual BenchResult executeExperiment(const std::size_t experimentNo, const std::size_t listSize) = 0;
 
     };
 
