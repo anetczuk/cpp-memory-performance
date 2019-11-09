@@ -36,7 +36,7 @@
 static const std::size_t BASE    = 16;                          /// for list size
 static const std::size_t STEPS   = 2;
 static const std::size_t DIV     = std::pow(2, STEPS-1);        /// list size divider
-static const std::size_t repeats = 50;                          /// number of repeats per experiment
+static const std::size_t repeats = 25;                          /// number of repeats per experiment
 
 
 // ================================================================================

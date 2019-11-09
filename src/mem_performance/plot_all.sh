@@ -19,6 +19,6 @@ for filename in plot_*.sh; do
 	if [ $filename == $curr_script ]; then
 		continue
 	fi
-	echo "Executing $filename $argv"
+	echo -e "\nExecuting $filename $argv"
     ./$filename $argv
 done
