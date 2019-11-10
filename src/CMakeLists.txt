@@ -200,6 +200,12 @@ endfunction()
 ## ================= build =================
 
 
+option( DISABLE_MT_BENCHMARKS "Disable multithread benchmarks" OFF )
+if ( DISABLE_MT_BENCHMARKS )
+    add_definitions(-DDISABLE_MT_BENCHMARKS)
+endif()
+
+
 set( EXTERNAL_LIBS "${CMAKE_SOURCE_DIR}/../libs" )
 
 

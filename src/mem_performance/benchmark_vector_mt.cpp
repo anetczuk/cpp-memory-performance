@@ -32,6 +32,11 @@ typedef benchmark::ThreadedExperiment<Experiment> Worker;
 
 
 int main(int argc, char** argv) {
+#ifdef DISABLE_MT_BENCHMARKS
+    std::cerr << "multithreaded benchmark disabled\n";
+    return 0;
+#endif
+
 	unsigned int nthreads = std::thread::hardware_concurrency();
 
 	BUFFERED( std::cerr, "found threads: " << nthreads << std::endl );
