@@ -2,7 +2,7 @@
 
 Performance of access time to raw array is presented in following image.
 
-![Performance of raw array](gcc/plot_array_st.png "Performance of raw array")
+![Performance of raw array](clang/plot_array_st.png "Performance of raw array")
 
 It can be clearly seen two plateau regions corresponding to:
 - *CPU* cache with access time around 4.2 ns per item in memory range between 1KB and 256KB
@@ -14,7 +14,7 @@ There is slight difference in performance between *L1* and *L2* cache. In additi
 
 ## single-threaded std::vector
 
-![Performance of std::vector](gcc/plot_vector_st.png "Performance of std::vector")
+![Performance of std::vector](clang/plot_vector_st.png "Performance of std::vector")
 
 Performance chart and observations are similar to *single-threaded raw array* experiment. Timing difference is very hard to notice.
 
@@ -28,7 +28,7 @@ Execution of this experiment is impossible due to clang's error in implementatio
 
 ## multi-processed std::vector
 
-![Performance of std::vector](gcc/plot_vector_mp.png "Performance of std::vector")
+![Performance of std::vector](clang/plot_vector_mp.png "Performance of std::vector")
 
 In multi-processed experiment chart of std::vector exists two regions:
 - region up to 32KB of container size
@@ -40,7 +40,7 @@ When container reaches 32KB of size there is gradual perfrmance loss up to 256KB
 
 ## single-threaded linked list
 
-![Performance of linked list](gcc/plot_cllist_st.png "Performance of linked list")
+![Performance of linked list](clang/plot_cllist_st.png "Performance of linked list")
 
 Performance chart demonstrates three regions:
 1. constant timing of cache up to 512KB
@@ -59,7 +59,7 @@ Execution of this experiment is impossible due to clang's error in implementatio
 
 ## multi-processed linked list
 
-![Performance of std::vector](gcc/plot_cllist_mp.png "Performance of linked list")
+![Performance of std::vector](clang/plot_cllist_mp.png "Performance of linked list")
 
 Performance chart and observations are similar to *single-threaded linked list* experiment. Timing difference is very hard to notice.
 
