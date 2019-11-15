@@ -1,7 +1,7 @@
 ## Experimets
 
 Each experiment consists of following benchmarks:
-- measuring access times of C array om single thread,
+- measuring access times of raw array (C-styled) on single thread,
 - single threaded access to std::vector,
 - multi-threaded access to std::vector,
 - multi-processed access to std::vector,
@@ -15,9 +15,8 @@ Number of processes is defined by bash command ```grep -c ^processor /proc/cpuin
 
 Each benchmark consists of time measurements of access time to allocated structures. Measurments are taken structures of size in range from almost empty container to container of maximum given size. 
 
-#TODO: explain C-array, std::vector and linked list 
 
-Time measurements are done using *Hayai* library. It can be found [here [1]](#ref01).
+Time measurements are done using *std::chrono* high resolution clock.
 
 
 ## Devices
