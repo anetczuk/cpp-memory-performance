@@ -12,7 +12,9 @@ Detailed results can be found [here](doc/README.md)
 ## TL;DR
 
 * gcc generates significantly faster code
-* there is no difference in memory access timing between multi-threaded and multi-processed version
+* there is almost no performance difference between *CPU* cache levels in comparison with *RAM*
+* there is no difference in memory access timing between multi-threaded and multi-processed benchmarks
+* there is no performance difference between single-threaded and multi-threaded benchmarks of linked list
 
 
 ## Compilation and execution

@@ -4,7 +4,7 @@ Performance of access time to raw array is presented in following image.
 
 ![Performance of raw array](clang/plot_array_st.png "Performance of raw array")
 
-It can be clearly seen two plateau regions corresponding to:
+There are two plateau regions corresponding to levels of cache:
 - *CPU* cache with access time around 4.2 ns per item in memory range between 1KB and 256KB
 - *RAM* with access time around 5.1 ns per item in memory range starting from 1MB
 
@@ -16,7 +16,7 @@ There is slight difference in performance between *L1* and *L2* cache. In additi
 
 ![Performance of std::vector](clang/plot_vector_st.png "Performance of std::vector")
 
-Performance chart and observations are similar to *single-threaded raw array* experiment. Timing difference is very hard to notice.
+Performance chart and observations are similar to *single-threaded raw array* experiment. Timing difference is hard to notice.
 
 
 
@@ -61,6 +61,13 @@ Execution of this experiment is impossible due to clang's error in implementatio
 
 ![Performance of std::vector](clang/plot_cllist_mp.png "Performance of linked list")
 
-Performance chart and observations are similar to *single-threaded linked list* experiment. Timing difference is very hard to notice.
+Performance chart and observations are similar to *single-threaded linked list* experiment. Timing difference is hard to notice.
 
+
+
+## Conclusions
+
+1. std::vector performs the same as raw array
+2. there is no difference between *L1* and *L2* cache
+4. there is no difference between results of single-threaded and multi-processed benchmarks of randomized linked list
 

@@ -4,11 +4,11 @@ Performance of access time to raw array is presented in following image.
 
 ![Performance of raw array](gcc/plot_array_st.png "Performance of raw array")
 
-It can be clearly seen three plateaus regions corresponding to levels of cache:
+There are three plateau regions corresponding to levels of cache:
 - *L1* with fastest access time around 0.07 ns per item up to 32KB of array size
 - *L2* with access time around 0.11 ns per item in memory range between 32KB and 256KB
 - *L3* with access time around 0.12 ns per item in memory range between 256KB and 4MB
-Starting from 9MB access to items involves use of RAM, so it can be seen on chart in form of worse performance.
+Starting from 9MB access to items involves use of *RAM*, so it can be seen on chart in form of worse performance.
 
 In addition, performance gain between *L2* - *L3* cache is minimal, but between *L1* - *L2* and *L3* - *RAM* is significant.
 
@@ -18,7 +18,7 @@ In addition, performance gain between *L2* - *L3* cache is minimal, but between 
 
 ![Performance of std::vector](gcc/plot_vector_st.png "Performance of std::vector")
 
-Performance chart and observations are similar to *single-threaded raw array* experiment. Timing difference is very hard to notice.
+Performance chart and observations are similar to *single-threaded raw array* experiment. Timing difference is hard to notice.
 
 
 
@@ -30,7 +30,7 @@ In multi-threaded experiment chart of std::vector exists two regions:
 - region up to 1MB of container size
 - region starting from 1MB
 
-When container reaches 1MB of size there is dramatic perfrmance loss due to increased cache coruption due to thread switching. Performance difference between *L1*, *L2* and *L3* cache levels is marginal in comparison of inefficient timing of *RAM*. 
+When container reaches 1MB of size there is dramatic perfrmance loss due to increased cache coruption because of thread switching. Performance difference between *L1*, *L2* and *L3* cache levels is marginal in comparison of inefficient timing of *RAM*. 
 
 
 
@@ -38,7 +38,7 @@ When container reaches 1MB of size there is dramatic perfrmance loss due to incr
 
 ![Performance of std::vector](gcc/plot_vector_mp.png "Performance of std::vector")
 
-Performance chart and observations are similar to *multi-threaded std::vector* experiment. Timing difference is very hard to notice.
+Performance chart and observations are similar to *multi-threaded std::vector* experiment. Timing difference is hard to notice.
 
 
 
@@ -67,6 +67,15 @@ Performance chart and observations are similar to *single-threaded linked list* 
 
 ![Performance of std::vector](gcc/plot_cllist_mp.png "Performance of linked list")
 
-Performance chart and observations are similar to *multi-threaded linked list* experiment. Timing difference is very hard to notice.
+Performance chart and observations are similar to *multi-threaded linked list* experiment. Timing difference is hard to notice.
 
+
+
+## Conclusions
+
+1. std::vector performs the same as raw array
+2. *L1* cache performs slightly better than *L2*
+3. *L3* performs almost the same as *L2*
+4. there is no difference between results of multi-threaded and multi-processed benchmarks
+5. there is no difference between results of single-threaded, multi-threaded and multi-processed benchmarks of randomized linked list
 

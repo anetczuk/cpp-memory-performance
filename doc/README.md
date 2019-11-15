@@ -13,7 +13,7 @@ Number of threads is defined by c++ call ```std::thread::hardware_concurrency()`
 
 Number of processes is defined by bash command ```grep -c ^processor /proc/cpuinfo```.
 
-Each benchmark consists of time measurements of access time to allocated structures. Measurments are taken structures of size in range from almost empty container to container of maximum given size. 
+Each benchmark consists of time measurements of access time to allocated structures. Measurments are taken for structures of size ranging from almost empty container to container of maximum given size. 
 
 
 Time measurements are done using *std::chrono* high resolution clock.
@@ -76,9 +76,5 @@ OS: Raspbian 8 (jessie)
 ## Results per experiment
 
 - [Intel i7](i7/README.md)
-- [RPi3](rpi3/README.md)
+- [Raspberry Pi 3](rpi3/README.md)
 
-
-## References:
-
-<a name="ref01">[1]</a>: *Hayai* benchmarking library [repository](https://github.com/nickbruun/hayai)
