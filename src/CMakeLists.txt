@@ -159,9 +159,13 @@ function(add_subdirectories_recursive)
 endfunction()
 
 
-function(build_cpps project_name)
+function(build_execs_list project_name )
     file(GLOB cpp_files *.cpp)
-    
+    build_execs_list( "${project_name}" "${cpp_files}" )
+endfunction()
+
+
+function(build_execs_list project_name cpp_files)
     foreach(single_cpp ${cpp_files})
         get_filename_component( cpp_name ${single_cpp} NAME_WE)
         if("${cpp_name}" MATCHES "^test*")

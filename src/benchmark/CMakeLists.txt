@@ -14,7 +14,7 @@ current_dir_name( CURR_DIR_NAME )
 #
 #set( EXT_LIBS Threads::Threads )
 #
-#build_cpps( ${CURR_DIR_NAME} )
+#build_execs( ${CURR_DIR_NAME} )
 
 
 ## tests

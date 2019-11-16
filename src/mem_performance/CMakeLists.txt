@@ -14,7 +14,14 @@ find_package(Threads REQUIRED)
 
 set( EXT_LIBS Threads::Threads )
 
-build_cpps( ${CURR_DIR_NAME} )
+
+include_directories( . )
+
+file(GLOB_RECURSE cpp_files *.cpp)
+build_execs_list( ${CURR_DIR_NAME} "${cpp_files}" )
+
+
+set( EXPERIMENT_DIR experiment )
 
 
 ## generate cachegrind scripts
@@ -28,20 +35,20 @@ endforeach()
 
 
 ## copy plot script
-file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_all.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
-file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_config_single.gnu DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
-file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/plot_config_multi.gnu DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
+file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/${EXPERIMENT_DIR}/plot_all.sh DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
+file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/${EXPERIMENT_DIR}/plot_config_single.gnu DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
+file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/${EXPERIMENT_DIR}/plot_config_multi.gnu DESTINATION ${CMAKE_CURRENT_BINARY_DIR} )
 
 
 function(generate_benchmark_script script_template data_type plot_title)
-    set( GENERATOR_FILE "${CMAKE_CURRENT_SOURCE_DIR}/${script_template}" )
+    set( GENERATOR_FILE "${CMAKE_CURRENT_SOURCE_DIR}/${EXPERIMENT_DIR}/${script_template}" )
     set( DATA_TYPE ${data_type} )
     set( PLOT_TITLE ${plot_title} )
     configure_file( ${GENERATOR_FILE} "plot_${data_type}.sh" @ONLY )
 endfunction()
 
 function(generate_benchmark_script_mp executable data_type plot_title)
-    set( GENERATOR_FILE "${CMAKE_CURRENT_SOURCE_DIR}/plot_mp.sh.in" )    
+    set( GENERATOR_FILE "${CMAKE_CURRENT_SOURCE_DIR}/${EXPERIMENT_DIR}/plot_mp.sh.in" )    
     set( BENCHMARK_TYPE ${executable} )
     set( DATA_TYPE ${data_type} )
     set( PLOT_TITLE ${plot_title} )
