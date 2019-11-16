@@ -44,7 +44,7 @@ inline uint64_t bench_iteration(const typename BType::value_type* list, const st
 			++sum;
 		}
 		if ( sum != listSize )  {
-		    BUFFERED( std::cerr, "internal error: " << sum << " " << listSize << std::endl );
+		    std::cerr << STRINGIZE_STREAM( "internal error: " << sum << " " << listSize << "\n" );
 			exit(1);
 		}
 	}
@@ -81,7 +81,7 @@ public:
 
 		const std::size_t listSize = calcContainerSize( memSize );
 
-	    BUFFERED( std::cerr, "initializing memory: " << memSize << " (" << std::fixed << std::setw( 6 ) << ( double(memSize) / (1024*1024*1024)) << " GB), container size: " << listSize << std::endl );
+	    std::cerr << STRINGIZE_STREAM( "initializing memory: " << memSize << " (" << std::fixed << std::setw( 6 ) << ( double(memSize) / (1024*1024*1024)) << " GB), container size: " << listSize << "\n" );
 
 		expsNumber = benchmark::LogExperimentFunctor::calcLog(listSize, BASE, DIV) + 1;
 		container = BType( listSize );
@@ -95,7 +95,7 @@ public:
         } else {
             const long long maxmem = benchmark::get_param_maxmem(argc, argv);
             if (maxmem < 1) {
-                BUFFERED( std::cerr, "'mem' or 'maxmem' argument not given\n" );
+                std::cerr << STRINGIZE_STREAM( "'mem' or 'maxmem' argument not given\n" );
                 exit(1);
             }
             logFunctor.maxSizeB = maxmem;

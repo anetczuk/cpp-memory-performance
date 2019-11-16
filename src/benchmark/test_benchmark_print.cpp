@@ -21,39 +21,32 @@
 /// SOFTWARE.
 ///
 
-#include <string>
+#include <gtest/gtest.h>
 
-#include "benchmark/benchmark_thread.h"
-#include "bench_array.h"
-
-
-typedef VectorExperiment<StdVector> Experiment;
-typedef benchmark::ThreadedExperiment<Experiment> Worker;
+#include "benchmark_print.h"
 
 
-int main(int argc, char** argv) {
-#ifdef DISABLE_MT_BENCHMARKS
-    std::cerr << "multithreaded benchmark disabled\n";
-    return 0;
-#endif
+TEST(benchmark_print, STRINGIZE_token) {
+    const std::string concatenated = STRINGIZE( 111, aaa );
+    EXPECT_EQ( "111,aaa", concatenated );
+}
 
-	unsigned int nthreads = std::thread::hardware_concurrency();
+TEST(benchmark_print, STRINGIZE_regular) {
+    const std::string concatenated = STRINGIZE( 111, "aaa", "qqq,www" );
+    EXPECT_EQ( "111,aaa,qqq,www", concatenated );
+}
 
-	std::cerr << STRINGIZE_STREAM( "found threads: " << nthreads << "\n" );
+TEST(benchmark_print, STRINGIZE_nospaces) {
+    const std::string concatenated = STRINGIZE( 111,"aaa","qqq,www" );
+    EXPECT_EQ( "111,aaa,qqq,www", concatenated );
+}
 
-	std::vector<Worker> workers;
-	workers.reserve(nthreads);				/// make sure threads won't be copied
+TEST(benchmark_print, STRINGIZE_spaces) {
+    const std::string concatenated = STRINGIZE( 111  ,   "  aaa"  ,   "qqq,  www" );
+    EXPECT_EQ( "111,  aaa,qqq,  www", concatenated );
+}
 
-	/// initialize
-	for(unsigned int i=0; i<nthreads; ++i) {
-		const std::string filePath = "./data/vector_mt_data_raw_core_" + std::to_string(i+1) + ".txt";
-		workers.push_back( Worker(filePath) );
-		Worker& currWorker = workers.back();
-		currWorker.experiment.parseArguments(argc, argv);
-		currWorker.experiment.logFunctor.divideMemory( nthreads );
-	}
-
-	Worker::runAll( workers );
-
-    return 0;
+TEST(benchmark_print, STRINGIZE_STREAM_regular) {
+    const std::string concatenated = STRINGIZE_STREAM( 111 << "aaa" );
+    EXPECT_EQ( "111aaa", concatenated );
 }

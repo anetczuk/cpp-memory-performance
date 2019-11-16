@@ -97,7 +97,7 @@ namespace benchmark {
         }
         }
         if (value < 0.0) {
-            BUFFERED( std::cerr, "could not parse data: '" << data << "'\n" );
+            std::cerr << STRINGIZE_STREAM( "could not parse data: '" << data << "'\n" );
             return -1;
         }
         long long memsize = value * unitMuliplier;

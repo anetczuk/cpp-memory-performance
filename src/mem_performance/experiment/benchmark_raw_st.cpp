@@ -80,7 +80,7 @@ inline uint64_t iterate<1>(const StdVector& container, const std::size_t listSiz
 
     auto endTime = MEASURE_TIME();
     if ( sum != 0 )  {
-        std::cerr << "internal error" << std::endl;
+        std::cerr << "internal error\n";
         exit(1);
     }
 
@@ -109,7 +109,7 @@ inline uint64_t iterate<2>(const StdVector& container, const std::size_t listSiz
 
     auto endTime = MEASURE_TIME();
     if ( sum != 0 )  {
-        std::cerr << "internal error" << std::endl;
+        std::cerr << "internal error\n";
         exit(1);
     }
 
@@ -138,7 +138,7 @@ inline uint64_t iterate<4>(const StdVector& container, const std::size_t listSiz
 
     auto endTime = MEASURE_TIME();
     if ( sum != 0 )  {
-        std::cerr << "internal error" << std::endl;
+        std::cerr << "internal error\n";
         exit(1);
     }
 
@@ -171,7 +171,7 @@ inline uint64_t iterate<8>(const StdVector& container, const std::size_t listSiz
 
     auto endTime = MEASURE_TIME();
     if ( sum != 0 )  {
-        std::cerr << "internal error" << std::endl;
+        std::cerr << "internal error\n";
         exit(1);
     }
 
@@ -212,7 +212,7 @@ inline uint64_t iterate<16>(const StdVector& container, const std::size_t listSi
 
     auto endTime = MEASURE_TIME();
     if ( sum != 0 )  {
-        std::cerr << "internal error" << std::endl;
+        std::cerr << "internal error\n";
         exit(1);
     }
 
@@ -236,11 +236,11 @@ void singleLoop(const StdVector& vector, const std::size_t listSize, const std::
     const double timePerElem = timePerIter / listSize;
 
     const std::size_t acc_num = listSize * itersNum;
-    std::cerr << std::fixed << i << " / " << maxiters << " iters: " << itersNum << " listSize: " << listSize << " repeats: " << repeats << " accnum: " << acc_num << std::endl;
+    std::cerr << std::fixed << i << " / " << maxiters << " iters: " << itersNum << " listSize: " << listSize << " repeats: " << repeats << " accnum: " << acc_num << "\n";
 
     const std::size_t currMemSize = listSize * sizeof( StdVector::value_type ) + sizeof( StdVector );
     std::cout << std::fixed << currMemSize << " B " << "0 B" << " ";
-    std::cout << std::fixed << "time/iter: " << timePerIter << " ns time/item: " << timePerElem << " ns iters: " << itersNum << " items: " << listSize << std::endl;
+    std::cout << std::fixed << "time/iter: " << timePerIter << " ns time/item: " << timePerElem << " ns iters: " << itersNum << " items: " << listSize << "\n";
 }
 
 
@@ -251,7 +251,7 @@ int main(int argc, char** argv) {
 	std::size_t memSizeB = 128*1024*1024L;
 	const long long mem = benchmark::get_param_maxmem(argc, argv);
 	if (mem < 1) {
-	    BUFFERED( std::cerr, "invalid maxmem argument\n" );
+	    std::cerr << STRINGIZE_STREAM( "invalid maxmem argument\n" );
 		exit(1);
 	}
 	memSizeB = mem;

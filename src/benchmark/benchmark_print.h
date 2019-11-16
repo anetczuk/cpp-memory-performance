@@ -25,10 +25,46 @@
 #define SRC_BENCHMARK_BENCHMARK_PRINT_H_
 
 #include <sstream>
+#include <iomanip>
+
+
+struct comma_is_space : std::ctype<char> {
+  comma_is_space() : std::ctype<char>(get_table()) {}
+  static mask const* get_table()
+  {
+    static mask rc[table_size];             /// table_size is 256
+    rc[' ']  = std::ctype_base::space;
+    rc[',']  = std::ctype_base::space;
+    rc['\n'] = std::ctype_base::space;
+    return &rc[0];
+  }
+};
+
+
+inline std::string dequote(const std::string& str) {
+    std::stringstream input( str );
+    input.imbue( std::locale(input.getloc(), new comma_is_space) );
+
+    std::stringstream output;
+    std::string buff;
+
+    while (input >> std::quoted(buff)) {
+//        std::cout << "buff: >" << buff << "<\n";
+        output << buff << ",";
+    }
+
+    std::string ret = output.str();
+    return ret.substr( 0, ret.size()-1 );       /// remove last comma
+}
+
+#define STRINGIZE( ... ) dequote( #__VA_ARGS__ )
+
+
+#define STRINGIZE_STREAM( data )  ((std::stringstream&)(std::stringstream() << data)).str()
 
 
 //
-// beffered print to prevent interleaving of messages
+// beffered print prevents interleaving of messages
 //
 #define BUFFERED( output, data )                \
             {                                   \

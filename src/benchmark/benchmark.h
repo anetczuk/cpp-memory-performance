@@ -39,6 +39,15 @@ static const std::size_t DIV     = std::pow(2, STEPS-1);        /// list size di
 static const std::size_t repeats = 25;                          /// number of repeats per experiment
 
 
+inline std::size_t calculateContainerSize( const std::size_t experimentNo ) {
+    const std::size_t exp = experimentNo / DIV;
+    const std::size_t mod = experimentNo % DIV;
+    const std::size_t mul = std::pow(2, exp);
+    const std::size_t listSize = BASE * mul / DIV * (DIV + mod);
+    return listSize;
+}
+
+
 // ================================================================================
 
 
@@ -77,11 +86,29 @@ namespace benchmark {
     	}
 
     	void runSingle(const std::size_t experimentNumber, std::ostream& outStream = std::cout) {
-            /// warm up
-            BUFFERED( std::cerr, "warming up" << std::endl );
-            executeExperiment(experimentNumber-1);
+    	    warmUp( experimentNumber-1 );
+            executeIteration(experimentNumber, experimentNumber, outStream);
+    	}
 
-            const BenchResult data = executeExperiment(experimentNumber);
+    	void runRange(const std::size_t experimentsNumber, std::ostream& outStream = std::cout) {
+    	    warmUp( 6 );
+            for(std::size_t i=0; i<=experimentsNumber; ++i) {
+                executeIteration(i, experimentsNumber, outStream);
+            }
+    	}
+
+
+    protected:
+
+    	void warmUp( const std::size_t experimentNo ) {
+//    	    std::cerr << STRINGIZE_STREAM( "warming up\n" );
+            const std::size_t experimentSize = calculateContainerSize( experimentNo );
+            executeExperiment( experimentNo, experimentSize );
+    	}
+
+    	void executeIteration(const std::size_t currExperiment, const std::size_t experimentsNo, std::ostream& outStream = std::cout) {
+            const std::size_t experimentSize = calculateContainerSize( currExperiment );
+            const BenchResult data = executeExperiment(currExperiment, experimentSize);
 
             if (data.valid == false) {
                 return;
@@ -96,50 +123,10 @@ namespace benchmark {
 
             const std::string memHuman = humanMemSize(memSize);
 
-            BUFFERED( std::cerr, std::fixed << experimentNumber << " iters: " << iters << " repeats: " << data.repeats << " memory: " << memSize << " B " << memHuman << std::endl );
+            std::cerr << STRINGIZE_STREAM( std::fixed << currExperiment << "/" << experimentsNo << " listSize: " << listSize << " iters: " << iters << " repeats: " << data.repeats << " memory: " << memSize << " B " << memHuman << "\n" );
 
-            BUFFERED( outStream, std::fixed << memSize << " B " << memHuman << " " );
-            BUFFERED( outStream, std::fixed << "time/iter: " << timePerIter << " ns time/item: " << timePerElem << " ns iters: " << iters << " items: " << listSize << std::endl );
-    	}
-
-    	void runRange(const std::size_t experimentsNumber, std::ostream& outStream = std::cout) {
-			/// warm up
-//    	    BUFFERED( std::cerr, "warming up" << std::endl );
-    	    executeExperiment(6);
-
-            for(std::size_t i=0; i<=experimentsNumber; ++i) {
-//            for(std::size_t i=experimentsNumber-1; i<experimentsNumber; --i) {
-                const BenchResult data = executeExperiment(i);
-
-                if (data.valid == false)
-                    continue;
-
-                const std::size_t iters = data.iterations;
-                const std::size_t listSize = data.containerSize;
-                const std::size_t memSize = data.memSize;
-                const uint64_t duration = data.duration;
-                const double timePerIter = double(duration) / iters;
-                const double timePerElem = timePerIter / listSize;
-
-                const std::string memHuman = humanMemSize(memSize);
-
-                BUFFERED( std::cerr, std::fixed << i << "/" << experimentsNumber << " listSize: " << listSize << " iters: " << iters << " repeats: " << data.repeats << " memory: " << memSize << " B " << memHuman << std::endl );
-
-                BUFFERED( outStream, std::fixed << memSize << " B " << memHuman << " " );
-                BUFFERED( outStream, std::fixed << "time/iter: " << timePerIter << " ns time/item: " << timePerElem << " ns iters: " << iters << " items: " << listSize << std::endl );
-            }
-    	}
-
-
-    protected:
-
-    	virtual BenchResult executeExperiment(const std::size_t experimentNo) {
-            const std::size_t exp = experimentNo / DIV;
-            const std::size_t mod = experimentNo % DIV;
-            const std::size_t mul = std::pow(2, exp);
-            const std::size_t listSize = BASE * mul / DIV * (DIV + mod);
-
-            return executeExperiment(experimentNo, listSize);
+            outStream << STRINGIZE_STREAM( std::fixed << memSize << " B " << memHuman << " " );
+            outStream << STRINGIZE_STREAM( std::fixed << "time/iter: " << timePerIter << " ns time/item: " << timePerElem << " ns iters: " << iters << " items: " << listSize << "\n" );
     	}
 
     	virtual BenchResult executeExperiment(const std::size_t experimentNo, const std::size_t listSize) = 0;

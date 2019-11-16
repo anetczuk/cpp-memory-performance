@@ -43,7 +43,7 @@ int main(int argc, char** argv) {
 
 	unsigned int nthreads = std::thread::hardware_concurrency();
 
-	BUFFERED( std::cerr, "found threads: " << nthreads << std::endl );
+	std::cerr << STRINGIZE_STREAM( "found threads: " << nthreads << "\n" );
 
 	std::vector<Worker> workers;
 	workers.reserve(nthreads);				/// make sure threads won't be copied
