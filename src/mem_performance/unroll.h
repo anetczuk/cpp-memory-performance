@@ -25,14 +25,10 @@
 #define MEM_PERFORMANCE_UNROLL_H_
 
 
-#ifdef __clang__
-    /// for clang
-    #pragma message("clang detected")
-    static const std::size_t UNROLL  = 1;
-#elif defined __GNUC__
-    /// for GCC
-    #pragma message("GCC detected: loop unrolled")
-    static const std::size_t UNROLL  = 16;
+#ifdef LOOP_UNROLL
+    static const std::size_t UNROLL = 16;
+#else
+    static const std::size_t UNROLL = 1;
 #endif
 
 
