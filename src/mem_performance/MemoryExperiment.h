@@ -24,7 +24,7 @@
 #ifndef MEM_PERFORMANCE_MEMORYEXPERIMENT_H_
 #define MEM_PERFORMANCE_MEMORYEXPERIMENT_H_
 
-#include "benchmark/benchmark.h"
+#include "benchmark/ContainerExperiment.h"
 #include "benchmark/benchmark_log.h"
 #include "benchmark/benchmark_params.h"
 

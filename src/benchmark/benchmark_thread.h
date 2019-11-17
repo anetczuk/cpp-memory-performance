@@ -24,11 +24,11 @@
 #ifndef SRC_BENCHMARK_THREAD_H_
 #define SRC_BENCHMARK_THREAD_H_
 
+#include "ContainerExperiment.h"
+
 #include <fstream>
 #include <thread>
 #include <vector>
-
-#include "benchmark.h"
 
 
 namespace benchmark {

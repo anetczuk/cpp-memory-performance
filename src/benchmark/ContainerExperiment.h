@@ -21,8 +21,8 @@
 /// SOFTWARE.
 ///
 
-#ifndef SRC_BENCHMARK_H_
-#define SRC_BENCHMARK_H_
+#ifndef SRC_CONTAINEREXPERIMENT_H_
+#define SRC_CONTAINEREXPERIMENT_H_
 
 #include <iostream>
 #include <cmath>
@@ -136,4 +136,4 @@ namespace benchmark {
 }
 
 
-#endif /* SRC_BENCHMARK_H_ */
+#endif /* SRC_CONTAINEREXPERIMENT_H_ */
