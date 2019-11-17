@@ -21,14 +21,9 @@
 /// SOFTWARE.
 ///
 
-#include <fstream>
-#include <string>
-#include <iomanip>
-
-#include "benchmark/benchmark_thread.h"
-#include "bench_list.h"
-
+#include "ListExperiment.h"
 #include "CustomLinkedList.h"
+#include "benchmark/benchmark_thread.h"
 
 
 typedef ListExperiment<CustomLinkedList> Experiment;

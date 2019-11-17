@@ -21,17 +21,14 @@
 /// SOFTWARE.
 ///
 
-#ifndef MEM_PERFORMANCE_BENCH_ARRAY_H_
-#define MEM_PERFORMANCE_BENCH_ARRAY_H_
+#ifndef MEM_PERFORMANCE_ARRAYEXPERIMENT_H_
+#define MEM_PERFORMANCE_ARRAYEXPERIMENT_H_
 
 #include "MemoryExperiment.h"
 
 #include "benchmark/benchmark_time.h"
 
 #include "unroll.h"
-
-#include <iostream>
-#include <limits>
 
 
 template<typename Type>
@@ -138,7 +135,7 @@ struct trait<Type, 16> {
 
 
 template <typename BType>
-class VectorExperiment: public MemoryExperiment {
+class ArrayExperiment: public MemoryExperiment {
 public:
 
     typedef typename BType::value_type InnerType;
@@ -146,10 +143,10 @@ public:
 	BType container;
 
 
-	VectorExperiment(): MemoryExperiment( sizeof(InnerType), sizeof(BType) ), container() {
+	ArrayExperiment(): MemoryExperiment( sizeof(InnerType), sizeof(BType) ), container() {
 	}
 
-	~VectorExperiment() override {
+	~ArrayExperiment() override {
 	}
 
 
@@ -180,4 +177,4 @@ protected:
 };
 
 
-#endif /* MEM_PERFORMANCE_BENCH_ARRAY_H_ */
+#endif /* MEM_PERFORMANCE_ARRAYEXPERIMENT_H_ */

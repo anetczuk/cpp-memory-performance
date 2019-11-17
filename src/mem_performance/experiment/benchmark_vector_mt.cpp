@@ -21,14 +21,12 @@
 /// SOFTWARE.
 ///
 
-#include <string>
-
-#include "benchmark/benchmark_thread.h"
-#include "bench_array.h"
+#include "ArrayExperiment.h"
 #include "Array.h"
+#include "benchmark/benchmark_thread.h"
 
 
-typedef VectorExperiment<StdVector> Experiment;
+typedef ArrayExperiment<StdVector> Experiment;
 typedef benchmark::ThreadedExperiment<Experiment> Worker;
 
 

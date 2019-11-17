@@ -21,12 +21,12 @@
 /// SOFTWARE.
 ///
 
-#include "bench_array.h"
+#include "ArrayExperiment.h"
 #include "Array.h"
 
 
 int main(int argc, char** argv) {
-	VectorExperiment<StdVector> experiment;
+    ArrayExperiment<StdVector> experiment;
 	experiment.parseArguments(argc, argv);
 	experiment.run();
     return 0;

@@ -21,14 +21,12 @@
 /// SOFTWARE.
 ///
 
-#ifndef MEM_PERFORMANCE_BENCH_LIST_H_
-#define MEM_PERFORMANCE_BENCH_LIST_H_
+#ifndef MEM_PERFORMANCE_LISTEXPERIMENT_H_
+#define MEM_PERFORMANCE_LISTEXPERIMENT_H_
 
 #include "MemoryExperiment.h"
 
 #include "benchmark/benchmark_time.h"
-
-#include <iomanip>
 
 
 template <typename BType>
@@ -97,4 +95,4 @@ protected:
 };
 
 
-#endif /* MEM_PERFORMANCE_BENCH_LIST_H_ */
+#endif /* MEM_PERFORMANCE_LISTEXPERIMENT_H_ */
