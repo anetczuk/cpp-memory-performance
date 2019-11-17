@@ -215,15 +215,15 @@ public:
 	    const InnerType* list = container.data();
 
 	    uint64_t bestDur = -1;
-	    for(std::size_t r=0; r<repeats; ++r) {
-//	        std::cerr << "repetition " << r << "/" << repeats << "\n";
+	    for(std::size_t r=0; r<REPEATS; ++r) {
+//	        std::cerr << "repetition " << r << "/" << REPEATS << "\n";
 	        const uint64_t dur = trait<InnerType, UNROLL>::iterate(list, containerSize, itersNum);
 	        if (dur < bestDur)
 	            bestDur = dur;
 	    }
 
 	    const std::size_t memSizeB = containerSize * DATA_SIZE + CONTAINER_SIZE;
-	    return benchmark::BenchResult(itersNum, repeats, containerSize, memSizeB, bestDur);
+	    return benchmark::BenchResult(itersNum, REPEATS, containerSize, memSizeB, bestDur);
 	}
 
 	std::size_t calcContainerSize( const std::size_t memSizeB ) const {
