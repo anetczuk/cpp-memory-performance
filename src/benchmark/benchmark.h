@@ -87,13 +87,13 @@ namespace benchmark {
 
     	void runSingle(const std::size_t experimentNumber, std::ostream& outStream = std::cout) {
     	    warmUp( experimentNumber-1 );
-            executeIteration(experimentNumber, experimentNumber, outStream);
+    	    executeExperiment(experimentNumber, experimentNumber, outStream);
     	}
 
     	void runRange(const std::size_t experimentsNumber, std::ostream& outStream = std::cout) {
     	    warmUp( 6 );
             for(std::size_t i=0; i<=experimentsNumber; ++i) {
-                executeIteration(i, experimentsNumber, outStream);
+                executeExperiment(i, experimentsNumber, outStream);
             }
     	}
 
@@ -103,12 +103,12 @@ namespace benchmark {
     	void warmUp( const std::size_t experimentNo ) {
 //    	    std::cerr << STRINGIZE_STREAM( "warming up\n" );
             const std::size_t experimentSize = calculateContainerSize( experimentNo );
-            executeExperiment( experimentNo, experimentSize );
+            executeRawExperiment( experimentNo, experimentSize );
     	}
 
-    	void executeIteration(const std::size_t currExperiment, const std::size_t experimentsNo, std::ostream& outStream = std::cout) {
+    	void executeExperiment(const std::size_t currExperiment, const std::size_t experimentsNo, std::ostream& outStream = std::cout) {
             const std::size_t experimentSize = calculateContainerSize( currExperiment );
-            const BenchResult data = executeExperiment(currExperiment, experimentSize);
+            const BenchResult data = executeRawExperiment(currExperiment, experimentSize);
 
             if (data.valid == false) {
                 return;
@@ -129,7 +129,7 @@ namespace benchmark {
             outStream << STRINGIZE_STREAM( std::fixed << "time/iter: " << timePerIter << " ns time/item: " << timePerElem << " ns iters: " << iters << " items: " << listSize << "\n" );
     	}
 
-    	virtual BenchResult executeExperiment(const std::size_t experimentNo, const std::size_t listSize) = 0;
+    	virtual BenchResult executeRawExperiment(const std::size_t experimentNo, const std::size_t listSize) = 0;
 
     };
 

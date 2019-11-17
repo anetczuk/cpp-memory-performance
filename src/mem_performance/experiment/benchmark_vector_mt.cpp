@@ -25,6 +25,7 @@
 
 #include "benchmark/benchmark_thread.h"
 #include "bench_array.h"
+#include "Array.h"
 
 
 typedef VectorExperiment<StdVector> Experiment;

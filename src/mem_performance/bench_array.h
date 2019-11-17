@@ -24,17 +24,14 @@
 #ifndef MEM_PERFORMANCE_BENCH_ARRAY_H_
 #define MEM_PERFORMANCE_BENCH_ARRAY_H_
 
-#include <iostream>
-#include <iomanip>
-#include <limits>
+#include "MemoryExperiment.h"
 
-#include "benchmark/benchmark.h"
-#include "benchmark/benchmark_log.h"
 #include "benchmark/benchmark_time.h"
-#include "benchmark/benchmark_params.h"
 
 #include "unroll.h"
-#include "Array.h"
+
+#include <iostream>
+#include <limits>
 
 
 template<typename Type>
@@ -141,96 +138,44 @@ struct trait<Type, 16> {
 
 
 template <typename BType>
-class VectorExperiment: public benchmark::ContainerExperiment {
+class VectorExperiment: public MemoryExperiment {
 public:
 
     typedef typename BType::value_type InnerType;
 
-	benchmark::LogExperimentFunctor2 logFunctor;
-	std::size_t expsNumber;
 	BType container;
 
-	std::size_t DATA_SIZE;
-	std::size_t CONTAINER_SIZE;
 
-
-	VectorExperiment(): benchmark::ContainerExperiment(),
-			logFunctor(),
-			expsNumber(0), container(),
-			DATA_SIZE( sizeof(InnerType) ), CONTAINER_SIZE( sizeof(BType) )
-	{
+	VectorExperiment(): MemoryExperiment( sizeof(InnerType), sizeof(BType) ), container() {
 	}
 
 	~VectorExperiment() override {
 	}
 
-	void initialize() {
-	    const uint64_t memSize = logFunctor.getMemorySize();
 
-		const std::size_t listSize = calcContainerSize( memSize );
+protected:
 
-	    std::cerr << STRINGIZE_STREAM( "initializing memory: " << memSize << " (" << std::fixed << std::setw( 6 ) << ( double(memSize) / (1024*1024*1024)) << " GB), container size: " << listSize << "\n" );
+	uint64_t executeIterations( const std::size_t containerSize, const std::size_t itersNum ) override {
+        const InnerType* list = container.data();
 
-		expsNumber = benchmark::LogExperimentFunctor::calcLog(listSize, BASE, DIV) + 1;
-		container = BType( listSize, 0 );
+        uint64_t bestDur = -1;
+        for(std::size_t r=0; r<REPEATS; ++r) {
+//          std::cerr << "repetition " << r << "/" << REPEATS << "\n";
+            const uint64_t dur = trait<InnerType, UNROLL>::iterate(list, containerSize, itersNum);
+            if (dur < bestDur)
+                bestDur = dur;
+        }
+
+        return bestDur;
 	}
 
-	void parseArguments(int argc, char** argv) {
-		const long long strictmem = benchmark::get_param_mem(argc, argv);
-		if (strictmem > 0) {
-		    logFunctor.strictSizeB = strictmem;
-		} else {
-            const long long maxmem = benchmark::get_param_maxmem(argc, argv);
-            if (maxmem < 1) {
-                std::cerr << STRINGIZE_STREAM( "'mem' or 'maxmem' argument not given\n" );
-                exit(1);
-            }
-            logFunctor.maxSizeB = maxmem;
-		}
+    std::size_t containerSize() const override {
+        return container.size();
+    }
 
-		const long long memdiv = benchmark::get_param_long(argc, argv, "memdiv");
-		if (memdiv > 0) {
-		    logFunctor.divideMemory( memdiv );
-		}
-	}
-
-	void run(std::ostream& outStream = std::cout) {
-		if (container.size() < 1) {
-			initialize();
-		}
-		if (logFunctor.isStrictMem()) {
-		    benchmark::ContainerExperiment::runSingle(expsNumber, outStream);
-		} else {
-		    benchmark::ContainerExperiment::runRange(expsNumber, outStream);
-		}
-	}
-
-	benchmark::BenchResult executeExperiment(const std::size_t experimentNo, const std::size_t listSize) override {
-	    const std::size_t maxListSize = container.size();
-	    const std::size_t containerSize = std::min( maxListSize, listSize );
-
-	    const double iterFactor = 3.0 * experimentNo / expsNumber + 1;
-	    const std::size_t itersNum = iterFactor * maxListSize / containerSize + 1;
-
-	    const InnerType* list = container.data();
-
-	    uint64_t bestDur = -1;
-	    for(std::size_t r=0; r<REPEATS; ++r) {
-//	        std::cerr << "repetition " << r << "/" << REPEATS << "\n";
-	        const uint64_t dur = trait<InnerType, UNROLL>::iterate(list, containerSize, itersNum);
-	        if (dur < bestDur)
-	            bestDur = dur;
-	    }
-
-	    const std::size_t memSizeB = containerSize * DATA_SIZE + CONTAINER_SIZE;
-	    return benchmark::BenchResult(itersNum, REPEATS, containerSize, memSizeB, bestDur);
-	}
-
-	std::size_t calcContainerSize( const std::size_t memSizeB ) const {
-		if (memSizeB <= CONTAINER_SIZE)
-			return 0;
-		return ( memSizeB - CONTAINER_SIZE ) / DATA_SIZE;
-	}
+    void allocateContainer( const std::size_t elementsNumber ) override {
+        container = BType( elementsNumber, 0 );
+    }
 
 };
 
