@@ -16,13 +16,13 @@ project( memory-performance )
 set( CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
 
 
-include( CMakeCompileFlags.txt )
+include( CMakeCompileFlags )
 
-include( CMakeCoverage.txt )
+include( CMakeCoverage )
 
-include( CMakeSanitizer.txt )
+include( CMakeSanitizer )
 
-include( CMakeUtils.txt )
+include( CMakeUtils )
 
 
 ##
