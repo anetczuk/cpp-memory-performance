@@ -1,3 +1,10 @@
+## Results per device
+
+- [Intel i7](i7/README.md)
+- [Raspberry Pi 3](rpi3/README.md)
+
+
+
 ## Experimets
 
 Each experiment consists of following benchmarks:
@@ -9,14 +16,26 @@ Each experiment consists of following benchmarks:
 - multi-threaded access to linked list,
 - multi-processed access to linked list,
 
-Number of threads is defined by c++ call ```std::thread::hardware_concurrency()```.
+
+All experiments share the same base pattern. It consists of:
+1. allocating container of maximum given memory space
+2. executing warm-up
+3. executing experiments range starting from minimal container size to container of maximum given memory space
+    a) each experiment consists of variable number of iterations depending on elements number to access
+    b) single iteration executes access to all container's elements in sequential order in given elements number
+    c) each experiment is repeated fixed number of times
+    d) access time is calculated by dividing fastest iteration time per number of elements
+
+Maximum given memory space is passed to experiment by command-line argument.
+
+Multi-threaded experiments are base experiments executed in maximum allowed *hardware* threads. Multi-processed experiments are base experiments executed in parallel processes (the same number as for multi-threaded version).
+
+Number of threads is defined by C++ call ```std::thread::hardware_concurrency()```.
 
 Number of processes is defined by bash command ```grep -c ^processor /proc/cpuinfo```.
 
-Each benchmark consists of time measurements of access time to allocated structures. Measurments are taken for structures of size ranging from almost empty container to container of maximum given size. 
-
-
 Time measurements are done using *std::chrono* high resolution clock.
+
 
 
 ## Devices
@@ -30,7 +49,9 @@ Information about RAM: ```sudo dmidecode --type 17```
 Information about OS: ```cat /etc/os-release```
 
 
+
 ### Intel i7
+
 All measurements have been done on following unit: 
 
 CPU:
@@ -52,6 +73,7 @@ Compilers:
 OS: XUbuntu 18.04.3 LTS (Bionic Beaver)
 
 
+
 ### Raspberry Pi 3 Model B Rev 1.2
 
 CPU:
@@ -71,10 +93,4 @@ Compilers:
 - clang++ 3.5.0
 
 OS: Raspbian 8 (jessie)
-
-
-## Results per experiment
-
-- [Intel i7](i7/README.md)
-- [Raspberry Pi 3](rpi3/README.md)
 
