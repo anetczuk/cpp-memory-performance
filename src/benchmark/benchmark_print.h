@@ -33,9 +33,9 @@ struct comma_is_space : std::ctype<char> {
   static mask const* get_table()
   {
     static mask rc[table_size];             /// table_size is 256
-    rc[' ']  = std::ctype_base::space;
-    rc[',']  = std::ctype_base::space;
-    rc['\n'] = std::ctype_base::space;
+    rc[ (int)' ' ]  = std::ctype_base::space;
+    rc[ (int)',' ]  = std::ctype_base::space;
+    rc[ (int)'\n' ] = std::ctype_base::space;
     return &rc[0];
   }
 };
