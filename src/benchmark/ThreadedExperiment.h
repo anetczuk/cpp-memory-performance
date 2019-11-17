@@ -21,8 +21,8 @@
 /// SOFTWARE.
 ///
 
-#ifndef SRC_BENCHMARK_THREAD_H_
-#define SRC_BENCHMARK_THREAD_H_
+#ifndef SRC_BENCHMARK_THREADEDEXPERIMENT_H_
+#define SRC_BENCHMARK_THREADEDEXPERIMENT_H_
 
 #include "ContainerExperiment.h"
 
@@ -84,4 +84,4 @@ namespace benchmark {
 }
 
 
-#endif /* SRC_BENCHMARK_THREAD_H_ */
+#endif /* SRC_BENCHMARK_THREADEDEXPERIMENT_H_ */

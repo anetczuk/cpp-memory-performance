@@ -21,9 +21,9 @@
 /// SOFTWARE.
 ///
 
+#include "benchmark/ThreadedExperiment.h"
 #include "ListExperiment.h"
 #include "CustomLinkedList.h"
-#include "benchmark/benchmark_thread.h"
 
 
 typedef ListExperiment<CustomLinkedList> Experiment;

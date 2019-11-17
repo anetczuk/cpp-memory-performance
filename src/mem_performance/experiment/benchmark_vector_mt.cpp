@@ -21,9 +21,9 @@
 /// SOFTWARE.
 ///
 
+#include "benchmark/ThreadedExperiment.h"
 #include "ArrayExperiment.h"
 #include "Array.h"
-#include "benchmark/benchmark_thread.h"
 
 
 typedef ArrayExperiment<StdVector> Experiment;
