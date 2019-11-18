@@ -31,6 +31,15 @@ To compile all exercises execute following sequence:
 Configuration can be done also by one of preconfigured scripts located in *configure* direcotry.
 
 
+## Techniques usage examples
+
+- inclusion of cmake's modules
+- *gtest* integration as cmake external project
+- configuration of code coverage for *gcc*
+- configuration of *clang* sanitizer
+- preparing data and plotting with *gnuplot*
+
+
 ## References:
 
 - *Googletest* testing framework [repository](https://github.com/google/googletest)
