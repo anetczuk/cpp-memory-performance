@@ -17,6 +17,10 @@ Detailed results can be found [here](doc/README.md)
 * there is no performance difference between single-threaded and multi-threaded benchmarks of linked list
 
 
+![Intel Core i7 compilers comparison](i7/vector_st_comparison.png "Intel Core i7 compilers comparison")
+![Raspberry Pi 3 compilers comparison](rpi3/vector_st_comparison.png "Raspberry Pi 3 compilers comparison")
+
+
 ## Compilation and execution
 
 To compile all exercises execute following sequence:

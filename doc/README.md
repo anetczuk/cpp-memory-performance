@@ -50,7 +50,7 @@ Information about OS: ```cat /etc/os-release```
 
 
 
-### Intel i7
+### Intel Core i7
 
 All measurements have been done on following unit: 
 
