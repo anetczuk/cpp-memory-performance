@@ -36,7 +36,7 @@ int main(int argc, char** argv) {
     return 0;
 #endif
 
-	unsigned int nthreads = std::thread::hardware_concurrency();
+    const unsigned int nthreads = std::thread::hardware_concurrency();
 
 	std::cerr << STRINGIZE_STREAM( "found threads: " << nthreads << "\n" );
 
