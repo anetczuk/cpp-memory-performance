@@ -1,7 +1,7 @@
 ## <a name="top"></a>Results per compiler
 
-- [gcc](GCC.md)
-- [clang](CLANG.md)
+- [gcc](GCC.md#top)
+- [clang](CLANG.md#top)
 
 
 

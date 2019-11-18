@@ -6,7 +6,7 @@ Benchmarks are done for processor cache (L1, L2, L3) and for RAM memory of code 
 
 ## Table of content
 
-1. [Results](doc/README.md#top)
+1. Results
     1. [Results per device](doc/README.md#top)
         1. [Inter Core i7](doc/i7/README.md#top)
             1. [Gcc](doc/i7/GCC.md#top)
