@@ -1,11 +1,11 @@
-## Results per device
+## <a name="results"></a>Results per device
 
-- [Intel i7](i7/README.md)
+- [Intel Core i7](i7/README.md)
 - [Raspberry Pi 3](rpi3/README.md)
 
 
 
-## Experimets
+## <a name="experiments_exp"></a>Experimets explanation
 
 Each experiment consists of following benchmarks:
 - measuring access times of raw array (C-styled) on single thread,
@@ -21,10 +21,10 @@ All experiments share the same base pattern. It consists of:
 1. allocating container of maximum given memory space
 2. executing warm-up
 3. executing experiments range starting from minimal container size to container of maximum given memory space
-    a) each experiment consists of variable number of iterations depending on elements number to access
-    b) single iteration executes access to all container's elements in sequential order in given elements number
-    c) each experiment is repeated fixed number of times
-    d) access time is calculated by dividing fastest iteration time per number of elements
+    1. each experiment consists of variable number of iterations depending on elements number to access
+    2. single iteration executes access to all container's elements in sequential order in given elements number
+    3. each experiment is repeated fixed number of times
+    4. access time is calculated by dividing fastest iteration time per number of elements
 
 Maximum given memory space is passed to experiment by command-line argument.
 
@@ -38,9 +38,9 @@ Time measurements are done using *std::chrono* high resolution clock.
 
 
 
-## Devices
+## <a name="devices"></a>Devices under benchmark
 
-Experiments were executed on two machines: *Intel i7* and *Raspbery Pi 3*, and for two compilers: gcc and clang.
+Experiments were executed on two machines: *Intel Core i7* and *Raspbery Pi 3*, and for two compilers: gcc and clang.
 
 To receive detailed info about CPU run: ```lscpu```
 
