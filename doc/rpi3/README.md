@@ -1,4 +1,4 @@
-## <a name="results"></a>Results per compiler
+## <a name="top"></a>Results per compiler
 
 - [gcc](GCC.md)
 - [clang](CLANG.md)

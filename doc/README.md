@@ -1,4 +1,4 @@
-## <a name="results"></a>Results per device
+## <a name="top"></a>Results per device
 
 - [Intel Core i7](i7/README.md)
 - [Raspberry Pi 3](rpi3/README.md)
