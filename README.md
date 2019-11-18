@@ -6,8 +6,18 @@ Benchmarks are done for processor cache (L1, L2, L3) and for RAM memory of code 
 
 ## Table of content
 
-1. Results
+1. [Results](doc/README.md)
     1. [Results per device](doc/README.md#results)
+        1. [Inter Core i7](doc/i7/README.md)
+            1. [Gcc](doc/i7/GCC.md)
+            2. [Clang](doc/i7/CLANG.md)
+            3. [Comparison between compilers](doc/i7/README.md#comparison)
+            4. [Conclusions](doc/i7/README.md#conclusions)
+        2. [Raspberry Pi 3](doc/rpi3/README.md)
+            1. [Gcc](doc/rpi3/GCC.md)
+            2. [Clang](doc/rpi3/CLANG.md)
+            3. [Comparison between compilers](doc/rpi3/README.md#comparison)
+            4. [Conclusions](doc/rpi3/README.md#conclusions)
     2. [Experimets explanation](doc/README.md#experiments_exp)
     3. [Devices under benchmark](doc/README.md#devices)
 2. [TL;DR](#tldr)
