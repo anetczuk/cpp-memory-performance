@@ -72,12 +72,12 @@ public:
 
 protected:
 
-    uint64_t executeIterations( const std::size_t containerSize, const std::size_t itersNum ) override {
+    uint64_t executeIterations( const std::size_t containerSize, const std::size_t itersNum, const std::size_t repeats ) override {
         const InnerType* list = container.data();
 
         uint64_t bestDur = -1;
-        for(std::size_t r=0; r<REPEATS; ++r) {
-//          std::cerr << "repetition " << r << "/" << REPEATS << "\n";
+        for(std::size_t r=1; r<=repeats; ++r) {
+//          std::cerr << "repetition " << r << "/" << repeats << "\n";
             const uint64_t dur = bench_iteration<BType>(list, containerSize, itersNum);
             if (dur < bestDur)
                 bestDur = dur;

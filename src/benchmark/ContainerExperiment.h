@@ -33,10 +33,11 @@
 // ================================================================================
 
 
-static const std::size_t BASE    = 16;                          /// for list size
-static const std::size_t STEPS   = 2;
-static const std::size_t DIV     = std::pow(2, STEPS-1);        /// list size divider
-static const std::size_t REPEATS = 25;                          /// number of repeats per experiment
+static const std::size_t BASE        = 16;                          /// for list size
+static const std::size_t STEPS       = 2;
+static const std::size_t DIV         = std::pow(2, STEPS-1);        /// list size divider
+static const std::size_t REPEATS_MAX = 25;                          /// number of repeats per experiment
+static const std::size_t REPEATS_MIN =  4;                          /// number of repeats per experiment
 
 
 inline std::size_t calculateContainerSize( const std::size_t experimentNo ) {

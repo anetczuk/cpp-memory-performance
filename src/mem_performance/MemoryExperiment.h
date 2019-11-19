@@ -102,18 +102,21 @@ protected:
 
     benchmark::BenchResult executeRawExperiment(const std::size_t experimentNo, const std::size_t listSize) override {
         const std::size_t maxListSize = containerSize();
-        const std::size_t containerSize = std::min( maxListSize, listSize );
+        const std::size_t currListSize = std::min( maxListSize, listSize );
 
-        const double iterFactor = 3.0 * experimentNo / expsNumber + 1;
-        const std::size_t itersNum = iterFactor * maxListSize / containerSize + 1;
+        const double expFactor = ((double) experimentNo ) / expsNumber;
 
-        const uint64_t bestDur = executeIterations( containerSize, itersNum );
+        const double iterFactor = 3.0 * expFactor + 1;
+        const std::size_t itersNum = iterFactor * maxListSize / currListSize + 1;
+        const std::size_t repeats = (1.0 - expFactor) * REPEATS_MAX + expFactor * REPEATS_MIN;
 
-        const std::size_t memSizeB = containerSize * DATA_SIZE + CONTAINER_SIZE;
-        return benchmark::BenchResult(itersNum, REPEATS, containerSize, memSizeB, bestDur);
+        const uint64_t bestDur = executeIterations( currListSize, itersNum, repeats );
+
+        const std::size_t memSizeB = currListSize * DATA_SIZE + CONTAINER_SIZE;
+        return benchmark::BenchResult(itersNum, repeats, currListSize, memSizeB, bestDur);
     }
 
-    virtual uint64_t executeIterations( const std::size_t containerSize, const std::size_t itersNum ) = 0;
+    virtual uint64_t executeIterations( const std::size_t containerSize, const std::size_t itersNum, const std::size_t repeats ) = 0;
 
     virtual std::size_t containerSize() const = 0;
 

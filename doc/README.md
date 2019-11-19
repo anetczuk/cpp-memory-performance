@@ -23,7 +23,7 @@ All experiments share the same base pattern. It consists of:
 3. executing experiments range starting from minimal container size to container of maximum given memory space
     1. each experiment consists of variable number of iterations depending on elements number to access
     2. single iteration executes access to all container's elements in sequential order in given elements number
-    3. each experiment is repeated fixed number of times
+    3. each experiment is repeated some number of times
     4. access time is calculated by dividing fastest iteration time per number of elements
 
 Maximum given memory space is passed to experiment by command-line argument.
