@@ -18,6 +18,8 @@ set( CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake )
 
 include( CMakeCompileFlags )
 
+include( CMakeErase )
+
 include( CMakeCoverage )
 
 include( CMakeSanitizer )
