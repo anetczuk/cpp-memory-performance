@@ -10,12 +10,21 @@ BUILD_TYPE=Debug
 
 SRC_DIR=$SCRIPT_DIR/../src
 
-BUILD_DIR_NAME=$(echo $BUILD_TYPE"_clang" | tr '[:upper:]' '[:lower:]')
+
+if [ "$#" -ge 1 ]; then
+    BUILD_DIR_NAME=$1
+else
+    BUILD_DIR_NAME=$(echo $BUILD_TYPE"_clang" | tr '[:upper:]' '[:lower:]')
+fi
+
 BUILD_DIR=$SCRIPT_DIR/../build/$BUILD_DIR_NAME
 
 
 ## remove old configuration
 rm -rf $BUILD_DIR 
+
+
+echo -e "Creating build directory: $BUILD_DIR\n"
 
 mkdir -p $BUILD_DIR
 cd $BUILD_DIR
