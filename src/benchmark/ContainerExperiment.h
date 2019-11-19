@@ -102,13 +102,16 @@ namespace benchmark {
     protected:
 
     	void warmUp( const std::size_t experimentNo ) {
-//    	    std::cerr << STRINGIZE_STREAM( "warming up\n" );
+    	    std::cerr << STRINGIZE_STREAM( "warming up\n" );
             const std::size_t experimentSize = calculateContainerSize( experimentNo );
             executeRawExperiment( experimentNo, experimentSize );
     	}
 
     	void executeExperiment(const std::size_t currExperiment, const std::size_t experimentsNo, std::ostream& outStream = std::cout) {
             const std::size_t experimentSize = calculateContainerSize( currExperiment );
+
+            std::cerr << STRINGIZE_STREAM( std::fixed << "progress: " << currExperiment << "/" << experimentsNo << "\n" );
+
             const BenchResult data = executeRawExperiment(currExperiment, experimentSize);
 
             if (data.valid == false) {
