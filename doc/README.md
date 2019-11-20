@@ -1,6 +1,7 @@
 ## <a name="top"></a>Results per device
 
 - [Intel Core i7](i7/README.md#top)
+- [VirtualBox on Intel Core i7](i7_vbox_1/README.md#top)
 - [Raspberry Pi 3](rpi3/README.md#top)
 
 
@@ -40,7 +41,11 @@ Time measurements are done using *std::chrono* high resolution clock.
 
 ## <a name="devices"></a>Devices under benchmark
 
-Experiments were executed on two machines: *Intel Core i7* and *Raspbery Pi 3*, and for two compilers: gcc and clang.
+Experiments were executed on following units: 
+- *Intel Core i7*
+- virtual machine on *i7*
+- *Raspbery Pi 3*
+and for two compilers: gcc and clang.
 
 To receive detailed info about CPU run: ```lscpu```
 
@@ -51,8 +56,6 @@ Information about OS: ```cat /etc/os-release```
 
 
 ### Intel Core i7
-
-All measurements have been done on following unit: 
 
 CPU:
 - Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
@@ -71,6 +74,18 @@ Compilers:
 - clang++ 6.0.0
 
 OS: XUbuntu 18.04.3 LTS (Bionic Beaver)
+
+
+
+### VirtualBox on Intel Core i7
+
+Hardware, compilers and operating system is the same as for host *Intel Core i7*. In addition, following VirtualBox settings has been made:
+- 4 CPUs (4 threads)
+- execution cap: 100%
+- enabled PAE/NX
+- RAM: 4096MB
+- Guest Additions installed
+- VirtualBox version 5
 
 
 
