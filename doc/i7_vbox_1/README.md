@@ -5,32 +5,26 @@
 
 
 
-## <a name="comparison"></a>Comparison between compilers
+## <a name="comparison"></a>Comparison with host environment
 
 
-### single-threaded array and std::vector 
+### single-threaded std::vector 
 
-Performance differs in two aspects:
-- shape of performance of *L1* cache
-- performance of rest of chart
+![Environment comparison on std::vector](host_vector_comparison.png "Environment comparison on std::vector")
 
-In first case performance of *GCC* is constant and of *CLANG* is parabolic which performs faster when container size grows. In second case curve shape is the same, but overal performance of *GCC* is better than performance of *CLANG*. For container 64KB timing is 0.11 ns to 0.14 ns. For container of 128MB *GCC* timing is 0.24 ns to 0.37 ns of *CLANG* timing.
+Chart presents comparison of efficiency of *CPU* cache on std::vector. As it can be seen, there is no difference between environments. This leads to conclussion that VirtualBox utilizes *CPU* cache without additional cost.
 
 
-### multi-threaded and multi-processed std::vector
+### single-threaded linked list
 
-Code performance of both compilers up to 1MB containers is simillar. Beyond this size *GCC* performs significantly faster (1.6 ns for 8MB) than *CLANG* (3.0 ns for 8MB).
+![Environment comparison on linked list](host_cllist_comparison.png "Environment comparison on linked list")
 
-
-### linked list for single-threaded, multi-threaded and multi-processed version
-
-Code of both compilers perform the same for all continer sizes.
+Chart presents comparison of efficiency of *RAM* on linked list. Performance of VBox until container size of 2MB is the same as for host -- it means until *RAM* is not involved in execution. Beyond that point utilization of *RAM* rises. In this case virtualized environment performs significantly worse than host environment. It means VirtualBox utilizes physical memory with additional high cost.
 
 
 
 ## Conclusions
 
-Comparison of compilers show that *GCC* performs significantly faster than *CLANG*. It can be seen in case of cache usage. In case of *RAM* access (linked list) there is no difference in timing between compilers.
-
+Presented comparison shows that there is no penalty in virtual environment related to cache -- it performs the same as in host environment. Situation changes in case of *RAM* access. In virtualized environment access time is up to two times longer than in native environment.
 
 

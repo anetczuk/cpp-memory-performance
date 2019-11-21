@@ -10,6 +10,8 @@
 
 ### single-threaded array and std::vector 
 
+![Intel Core i7 compilers comparison](vector_st_comparison.png "Intel Core i7 compilers comparison")
+
 Performance differs in two aspects:
 - shape of performance of *L1* cache
 - performance of rest of chart

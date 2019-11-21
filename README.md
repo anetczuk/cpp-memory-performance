@@ -21,7 +21,7 @@ Benchmarks are done for processor cache (L1, L2, L3) and for RAM memory of code 
             2. [VirtualBox](doc/i7_vbox_1/README.md#top)
                 1. [Gcc](doc/i7_vbox_1/GCC.md#top)
                 2. [Clang](doc/i7_vbox_1/CLANG.md#top)
-                3. [Comparison between compilers](doc/i7_vbox_1/README.md#comparison)
+                3. [Comparison with host environment](doc/i7_vbox_1/README.md#comparison)
                 4. [Conclusions](doc/i7_vbox_1/README.md#conclusions)
         2. [Raspberry Pi 3](doc/rpi3/README.md#top)
             1. [Gcc](doc/rpi3/GCC.md#top)
@@ -41,10 +41,12 @@ Benchmarks are done for processor cache (L1, L2, L3) and for RAM memory of code 
 * there is almost no performance difference between *CPU* cache levels in comparison with *RAM*
 * there is no difference in memory access timing between multi-threaded and multi-processed benchmarks
 * there is no performance difference between single-threaded and multi-threaded benchmarks of linked list
-
+* VirtualBox utilizes *CPU* cache as efficient as host system
+* access time to *RAM* under VirtualBox is up to two times longer than under host
 
 ![Intel Core i7 compilers comparison](doc/i7/vector_st_comparison.png "Intel Core i7 compilers comparison")
-![Raspberry Pi 3 compilers comparison](doc/rpi3/vector_st_comparison.png "Raspberry Pi 3 compilers comparison")
+
+![VirtualBox vs host on Intel Core i7](doc/i7_vbox_1/host_cllist_comparison.png "VirtualBox vs host on Intel Core i7")
 
 
 ## <a name="compilation"></a>Compilation and execution
