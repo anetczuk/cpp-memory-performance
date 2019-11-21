@@ -1,11 +1,3 @@
-## <a name="top"></a>Results per device
-
-- [Intel Core i7](i7/README.md#top)
-- [VirtualBox on Intel Core i7](i7_vbox_1/README.md#top)
-- [Raspberry Pi 3](rpi3/README.md#top)
-
-
-
 ## <a name="experiments_exp"></a>Experimets explanation
 
 Each experiment consists of following benchmarks:
@@ -55,7 +47,7 @@ Information about OS: ```cat /etc/os-release```
 
 
 
-### Intel Core i7
+### <a name="intel"></a>Intel Core i7
 
 CPU:
 - Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
@@ -69,6 +61,9 @@ RAM:
 - speed: 2667 MT/s
 - size: 2 x 8192MB
 
+
+#### Host environment
+
 Compilers:
 - g++ 7.4.0
 - clang++ 6.0.0
@@ -76,10 +71,9 @@ Compilers:
 OS: XUbuntu 18.04.3 LTS (Bionic Beaver)
 
 
+#### VirtualBox environment
 
-### VirtualBox on Intel Core i7
-
-Hardware, compilers and operating system is the same as for host *Intel Core i7*. In addition, following VirtualBox settings has been made:
+Hardware, compilers and operating system is the same as for host environment. In addition, following VirtualBox settings has been made:
 - 4 CPUs (4 threads)
 - execution cap: 100%
 - enabled PAE/NX
@@ -89,7 +83,7 @@ Hardware, compilers and operating system is the same as for host *Intel Core i7*
 
 
 
-### Raspberry Pi 3 Model B Rev 1.2
+### <a name="rpi"></a>Raspberry Pi 3 Model B Rev 1.2
 
 CPU:
 - Broadcom BCM2837 SoC with ARMv7 Processor rev 4 (v7l) - ARM Cortex-A53 @ 1200 MHz
@@ -109,3 +103,10 @@ Compilers:
 
 OS: Raspbian 8 (jessie)
 
+
+
+## <a name="results"></a>Results per device
+
+- [Host Intel Core i7](i7/README.md#top)
+- [VirtualBox on Intel Core i7](i7_vbox_1/README.md#top)
+- [Raspberry Pi 3](rpi3/README.md#top)

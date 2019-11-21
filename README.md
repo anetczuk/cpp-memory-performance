@@ -6,20 +6,28 @@ Benchmarks are done for processor cache (L1, L2, L3) and for RAM memory of code 
 
 ## Table of content
 
-1. Results
-    1. [Results per device](doc/README.md#top)
-        1. [Inter Core i7](doc/i7/README.md#top)
-            1. [Gcc](doc/i7/GCC.md#top)
-            2. [Clang](doc/i7/CLANG.md#top)
-            3. [Comparison between compilers](doc/i7/README.md#comparison)
-            4. [Conclusions](doc/i7/README.md#conclusions)
+1. Experiments description and results
+    1. [Experimets explanation](doc/README.md#experiments_exp)
+    2. [Devices under benchmark](doc/README.md#devices)
+        1. [Inter Core i7](doc/README.md#intel)
+        2. [Raspberry Pi 3](doc/README.md#rpi)
+    3. [Results per device](doc/README.md#results)
+        1. *Inter Core i7*
+            1. [Host](doc/i7/README.md#top)
+                1. [Gcc](doc/i7/GCC.md#top)
+                2. [Clang](doc/i7/CLANG.md#top)
+                3. [Comparison between compilers](doc/i7/README.md#comparison)
+                4. [Conclusions](doc/i7/README.md#conclusions)
+            2. [VirtualBox](doc/i7_vbox_1/README.md#top)
+                1. [Gcc](doc/i7_vbox_1/GCC.md#top)
+                2. [Clang](doc/i7_vbox_1/CLANG.md#top)
+                3. [Comparison between compilers](doc/i7_vbox_1/README.md#comparison)
+                4. [Conclusions](doc/i7_vbox_1/README.md#conclusions)
         2. [Raspberry Pi 3](doc/rpi3/README.md#top)
             1. [Gcc](doc/rpi3/GCC.md#top)
             2. [Clang](doc/rpi3/CLANG.md#top)
             3. [Comparison between compilers](doc/rpi3/README.md#comparison)
             4. [Conclusions](doc/rpi3/README.md#conclusions)
-    2. [Experimets explanation](doc/README.md#experiments_exp)
-    3. [Devices under benchmark](doc/README.md#devices)
 2. [TL;DR](#tldr)
 3. [Compilation and execution](#compilation)
 4. [Requirements](#requirements)
