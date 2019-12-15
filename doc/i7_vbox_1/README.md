@@ -19,7 +19,7 @@ Chart presents comparison of efficiency of *CPU* cache on std::vector. As it can
 
 ![Environment comparison on linked list](host_cllist_comparison.png "Environment comparison on linked list")
 
-Chart presents comparison of efficiency of *RAM* on linked list. Performance of VBox until container size of 2MB is the same as for host -- it means until *RAM* is not involved in execution. Beyond that point utilization of *RAM* rises. In this case virtualized environment performs significantly worse than host environment. It means VirtualBox utilizes physical memory with additional high cost.
+Chart presents comparison of efficiency of *RAM* on linked list. Performance of VBox until container size of 2MB is the same as for host -- it means *RAM* is not involved in execution. Beyond that point utilization of *RAM* rises. In this case virtualized environment performs significantly worse than host environment. It means VirtualBox utilizes physical memory with additional high cost.
 
 
 
