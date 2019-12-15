@@ -1,4 +1,4 @@
-## <a name="experiments_exp"></a>Experimets explanation
+## <a name="experiments_exp"></a> Experimets explanation
 
 Each experiment consists of following benchmarks:
 - measuring access times of raw array (C-styled) on single thread,
@@ -31,11 +31,12 @@ Time measurements are done using *std::chrono* high resolution clock.
 
 
 
-## <a name="devices"></a>Devices under benchmark
+## <a name="devices"></a> Enironments under benchmark
 
 Experiments were executed on following units: 
 - *Intel Core i7*
-- virtual machine on *i7*
+- virtual machine #1 on *i7*
+- virtual machine #2 on *i7*
 - *Raspbery Pi 3*
 and for two compilers: gcc and clang.
 
@@ -47,7 +48,7 @@ Information about OS: ```cat /etc/os-release```
 
 
 
-### <a name="intel"></a>Intel Core i7
+### <a name="intel"></a> Intel Core i7
 
 CPU:
 - Intel(R) Core(TM) i7-8750H CPU @ 2.20GHz
@@ -71,7 +72,7 @@ Compilers:
 OS: XUbuntu 18.04.3 LTS (Bionic Beaver)
 
 
-#### VirtualBox environment
+#### <a name="vbox1"></a> VirtualBox #1 environment
 
 Hardware, compilers and operating system is the same as for host environment. In addition, following VirtualBox settings has been made:
 - 4 CPUs (4 threads)
@@ -82,8 +83,14 @@ Hardware, compilers and operating system is the same as for host environment. In
 - VirtualBox version 5
 
 
+#### <a name="vbox2"></a> VirtualBox #2 environment
 
-### <a name="rpi"></a>Raspberry Pi 3 Model B Rev 1.2
+This is the same environment as *VirtualBox #1*, but with newest compilers:
+- gcc 9.2.1
+- clang 9.0.0
+
+
+### <a name="rpi"></a> Raspberry Pi 3 Model B Rev 1.2
 
 CPU:
 - Broadcom BCM2837 SoC with ARMv7 Processor rev 4 (v7l) - ARM Cortex-A53 @ 1200 MHz
@@ -105,8 +112,10 @@ OS: Raspbian 8 (jessie)
 
 
 
-## <a name="results"></a>Results per device
+## <a name="results"></a> Results per environment
 
 - [Host Intel Core i7](i7/README.md#top)
-- [VirtualBox on Intel Core i7](i7_vbox_1/README.md#top)
+- [VirtualBox #1 on Intel Core i7](i7_vbox_1/README.md#top)
+- [VirtualBox #2 on Intel Core i7](i7_vbox_2/README.md#top)
 - [Raspberry Pi 3](rpi3/README.md#top)
+
