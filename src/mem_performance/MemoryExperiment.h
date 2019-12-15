@@ -106,7 +106,7 @@ protected:
 
         const double expFactor = ((double) experimentNo ) / expsNumber;
 
-        const double iterFactor = 3.0 * expFactor + 1;
+        const double iterFactor = expFactor + 1.0 / expsNumber;
         const std::size_t itersNum = iterFactor * maxListSize / currListSize + 1;
         const std::size_t repeats = (1.0 - expFactor) * REPEATS_MAX + expFactor * REPEATS_MIN;
 

@@ -56,7 +56,7 @@ function(generate_benchmark_script_mp executable data_type plot_title)
 endfunction()
 
 
-generate_benchmark_script( plot_st.sh.in    raw_st "std::vector access times (raw)" )
+## generate_benchmark_script( plot_st.sh.in    raw_st "std::vector access times (raw)" )
 generate_benchmark_script( plot_st.sh.in  array_st "raw array access times" )
 generate_benchmark_script( plot_st.sh.in vector_st "std::vector access times" )
 generate_benchmark_script( plot_st.sh.in cllist_st "linked list access times" )
