@@ -44,10 +44,10 @@ endif()
 
 
 set( LOOP_UNROLL_DEFAULT OFF )
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    ## default value for GCC
-    set( LOOP_UNROLL_DEFAULT ON )
-endif()
+#if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+#    ## default value for GCC
+#    set( LOOP_UNROLL_DEFAULT ON )
+#endif()
 option( LOOP_UNROLL "Loop unroll" ${LOOP_UNROLL_DEFAULT} )
 if ( LOOP_UNROLL )
     add_definitions( -DLOOP_UNROLL )

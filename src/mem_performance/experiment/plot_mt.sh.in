@@ -69,6 +69,9 @@ echo "Extracting data"
 plot_data_files=""
 for i in $(seq 1 $cores_num); do
     in_file=${raw_file_prefix}_${i}.txt
+    if [ ! -f "$in_file" ]; then
+        continue
+    fi
     data_file=${plot_file_prefix}_$i.txt
     awk -F" " '{print $1, $9, $3 $4}' $in_file > $data_file
     if [ -s "$data_file" ]; then
