@@ -10,6 +10,8 @@ SCRIPT_NAME=$(basename "$0")
 SCRIPT_NAME=${SCRIPT_NAME%.*}
 
 
+SHOW_PLOT=1
+
 
 ## $1 -- curve data file
 ## $2 -- curve label
@@ -29,6 +31,7 @@ plot_data() {
         ## echo -e "plot subcommand:\n${plot_string}"
         
         gnuplot -p -e '
+                        show_plot = "'"${SHOW_PLOT}"'";
                         call "plot_config_head.gnu";
                         set title "'"${plot_title}"'"; 
                         output_png = "'"${plot_png}"'";
