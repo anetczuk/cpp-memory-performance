@@ -10,7 +10,7 @@ SCRIPT_NAME=$(basename "$0")
 SCRIPT_NAME=${SCRIPT_NAME%.*}
 
 
-SHOW_PLOT=1
+SHOW_PLOT=0
 
 
 ## $1 -- curve data file
@@ -21,7 +21,7 @@ plot_data() {
     local curve_data=$1
     local curve_label=$2
     local plot_title=$3
-        
+
     if [ ! -f "$curve_data" ]; then
         echo "No data to plot: $curve_data"
     else
@@ -32,9 +32,9 @@ plot_data() {
         
         gnuplot -p -e '
                         show_plot = "'"${SHOW_PLOT}"'";
-                        call "plot_config_head.gnu";
                         set title "'"${plot_title}"'"; 
                         output_png = "'"${plot_png}"'";
+                        call "plot_config_head.gnu";
                         plot "'"${curve_data}"'" using 1:2 title "'"${curve_label}"'" with points ls 7,
                              "'"${curve_data}"'" using 1:2 title "bezier smooth" smooth bezier ls 1 lw 2;
                         call "plot_config_foot.gnu";

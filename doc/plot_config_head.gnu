@@ -21,5 +21,6 @@ if (show_plot eq "TRUE") show_plot="true"
 if (show_plot ne "true") {
     show_plot="false"
     set terminal png
+    ## print "output: ".output_png
     set output output_png
 }

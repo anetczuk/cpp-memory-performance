@@ -14,7 +14,7 @@ DATA_BASE_DIR=$SCRIPT_DIR/measurements
 COMPARISON_DIR=$SCRIPT_DIR/comparison
 
 
-SHOW_PLOT=1
+SHOW_PLOT=0
 
 
 ## $1 -- curves array passed as reference
@@ -48,8 +48,8 @@ merge_curves() {
     
     gnuplot -p -e '
                     show_plot = "'"${SHOW_PLOT}"'";
-                    output_png = "'"${plot_png}"'";
                     set title "'"${plot_title}"'"; 
+                    output_png = "'"${plot_png}"'";
                     call "plot_config_head.gnu";
                     '"${plot_string}"'; 
                     call "plot_config_foot.gnu";
@@ -68,7 +68,11 @@ compare_compilers_plot() {
                             "$DATA_BASE_DIR/$1/clang_unroll/$data_file"
                             )
     local compiler_labels=("gcc" "gcc unroll" "clang" "clang unroll")
-    local plot_png="measurements/$1/$2_comparison.png"
+    local out_png_dir="$COMPARISON_DIR/$1"
+    local plot_png="$out_png_dir/$2_comparison.png"
+    
+    mkdir -p "$out_png_dir"
+    
     echo "$1: plotting $3"
     merge_curves plot_data_files compiler_labels "$3" "$plot_png"
 }
@@ -147,8 +151,10 @@ envs_compiler_plot_labeled() {
 ## $3 -- compiler
 ## $4 -- title prefix
 envs_compiler_plot() {
-    local data_curves_labels=("$env1" "$env2")
-    envs_compiler_plot_labeled "$1" "$2" "$3" "$4" data_curves_labels
+    local env1=$1
+    local env2=$2
+    local plot_curves_labels=("$env1" "$env2")
+    envs_compiler_plot_labeled "$env1" "$env2" "$3" "$4" plot_curves_labels
 }
 
 
@@ -162,9 +168,6 @@ vbox_compiler_plot() {
 
 
 ## =============================================
-
-
-SHOW_PLOT=0
 
 
 ## comparison of compilers on single device
