@@ -93,13 +93,14 @@ single_env_compilers_compare() {
 ## $2 -- env 2
 ## $3 -- compiler
 ## $4 -- title prefix
-envs_compiler_plot() {
+## $5 -- curve labels passed as reference
+envs_compiler_plot_labeled() {
     local env1=$1
     local env2=$2
     local compiler=$3
     local title_prefix=$4
-    
-    local data_curves_labels=("$env1" "$env2")
+    ## passed as reference
+    local -n data_curves_labels=$5
     
     local out_dir="$COMPARISON_DIR/$env1-$env2/$compiler"
     
@@ -141,76 +142,46 @@ envs_compiler_plot() {
     merge_curves plot_data_files data_curves_labels "$plot_title" "$out_dir/${data_file}.png"
 }
 
+## $1 -- env 1
+## $2 -- env 2
+## $3 -- compiler
+## $4 -- title prefix
+envs_compiler_plot() {
+    local data_curves_labels=("$env1" "$env2")
+    envs_compiler_plot_labeled "$1" "$2" "$3" "$4" data_curves_labels
+}
+
 
 ## $1 -- compiler
 ## $2 -- curve labels passed as reference
 vbox_compiler_plot() {
     local compiler=$1
     local -n data_labels=$2
-    
-    local out_dir="$COMPARISON_DIR/i7_vbox_1-i7_vbox_2/$compiler"
-    
-    mkdir -p "$out_dir"
-    
-    local data_file="array_st_data_plot"
-    local plot_title="Comparison of compiler versions on raw array"
-    local plot_data_files=("$DATA_BASE_DIR/i7_vbox_1/$compiler/${data_file}.txt" "$DATA_BASE_DIR/i7_vbox_2/$compiler/${data_file}.txt")
-    merge_curves plot_data_files data_labels "$plot_title" "$out_dir/${data_file}.png"
-    
-    local data_file="vector_st_data_plot"
-    local plot_title="Comparison of compiler versions on std::vector"
-    local plot_data_files=("$DATA_BASE_DIR/i7_vbox_1/$compiler/${data_file}.txt" "$DATA_BASE_DIR/i7_vbox_2/$compiler/${data_file}.txt")
-    merge_curves plot_data_files data_labels "$plot_title" "$out_dir/${data_file}.png"
-    
-    local data_file="vector_mt_data_plot"
-    local plot_title="Comparison of compiler versions on multi-threadd std::vector"
-    local plot_data_files=("$DATA_BASE_DIR/i7_vbox_1/$compiler/${data_file}.txt" "$DATA_BASE_DIR/i7_vbox_2/$compiler/${data_file}.txt")
-    merge_curves plot_data_files data_labels "$plot_title" "$out_dir/${data_file}.png"
-    
-    local data_file="vector_mp_data_plot"
-    local plot_title="Comparison of compiler versions on multi-processed std::vector"
-    local plot_data_files=("$DATA_BASE_DIR/i7_vbox_1/$compiler/${data_file}.txt" "$DATA_BASE_DIR/i7_vbox_2/$compiler/${data_file}.txt")
-    merge_curves plot_data_files data_labels "$plot_title" "$out_dir/${data_file}.png"
-    
-    local data_file="cllist_st_data_plot"
-    local plot_title="Comparison of compiler versions on linked list"
-    local plot_data_files=("$DATA_BASE_DIR/i7_vbox_1/$compiler/${data_file}.txt" "$DATA_BASE_DIR/i7_vbox_2/$compiler/${data_file}.txt")
-    merge_curves plot_data_files data_labels "$plot_title" "$out_dir/${data_file}.png"
-    
-    local data_file="cllist_mt_data_plot"
-    local plot_title="Comparison of compiler versions on multi-threadd linked list"
-    local plot_data_files=("$DATA_BASE_DIR/i7_vbox_1/$compiler/${data_file}.txt" "$DATA_BASE_DIR/i7_vbox_2/$compiler/${data_file}.txt")
-    merge_curves plot_data_files data_labels "$plot_title" "$out_dir/${data_file}.png"
-    
-    local data_file="cllist_mp_data_plot"
-    local plot_title="Comparison of compiler versions on multi-processed linked list"
-    local plot_data_files=("$DATA_BASE_DIR/i7_vbox_1/$compiler/${data_file}.txt" "$DATA_BASE_DIR/i7_vbox_2/$compiler/${data_file}.txt")
-    merge_curves plot_data_files data_labels "$plot_title" "$out_dir/${data_file}.png"
+    envs_compiler_plot_labeled "i7_vbox_1" "i7_vbox_2" "$compiler" "Comparison of vbox1 and vbox2 environments" data_labels
 }
 
 
 ## =============================================
 
 
-## comparison of compilers on single device
 SHOW_PLOT=0
-disabled_for_moment01() {
+
+
+## comparison of compilers on single device
 single_env_compilers_compare i7
 single_env_compilers_compare rpi3
 single_env_compilers_compare i7_vbox_1
 single_env_compilers_compare i7_vbox_2
+
 
 ## comparison of host vs virtual box #1
 envs_compiler_plot "i7" "i7_vbox_1" gcc          "Comparison of host and Virtual Box"
 envs_compiler_plot "i7" "i7_vbox_1" gcc_unroll   "Comparison of host and Virtual Box"
 envs_compiler_plot "i7" "i7_vbox_1" clang        "Comparison of host and Virtual Box"
 envs_compiler_plot "i7" "i7_vbox_1" clang_unroll "Comparison of host and Virtual Box"
-}
 
 
-dddd() {
 ## comparison of compiler versions on vbox
-SHOW_PLOT=1
 plot_labels=("gcc 7.4.0" "gcc 9.2.1")
 vbox_compiler_plot gcc plot_labels
 
@@ -222,27 +193,4 @@ vbox_compiler_plot clang plot_labels
 
 plot_labels=("clang unroll 7.0.0" "clang unroll 9.0.0")
 vbox_compiler_plot clang_unroll plot_labels
-}
-
-
-aaa() {    
-    ## comparison of gcc versions on vbox
-    plot_data_files=("$SCRIPT_DIR/i7_vbox_1/gcc/vector_st_data_plot.txt" "$SCRIPT_DIR/i7_vbox_2/gcc/vector_st_data_plot.txt")
-    plot_labels=("7.4.0" "9.2.1")
-    merge_curves plot_data_files plot_labels "Comparison of clang versions on std::vector" "i7_vbox_2/gcc_vector_comparison.png"
-    
-    plot_data_files=("$SCRIPT_DIR/i7_vbox_1/gcc/cllist_st_data_plot.txt" "$SCRIPT_DIR/i7_vbox_2/gcc/cllist_st_data_plot.txt")
-    plot_labels=("7.4.0" "9.2.1")
-    merge_curves plot_data_files plot_labels "Comparison of GCC versions on linked list" "i7_vbox_2/gcc_cllist_comparison.png"
-    
-    
-    ## comparison of clang versions on vbox
-    plot_data_files=("$SCRIPT_DIR/i7_vbox_1/clang/vector_st_data_plot.txt" "$SCRIPT_DIR/i7_vbox_2/clang/vector_st_data_plot.txt")
-    plot_labels=("6.0.0" "9.0.0")
-    merge_curves plot_data_files plot_labels "Comparison of clang versions on std::vector" "i7_vbox_2/clang_vector_comparison.png"
-    
-    plot_data_files=("$SCRIPT_DIR/i7_vbox_1/clang/cllist_st_data_plot.txt" "$SCRIPT_DIR/i7_vbox_2/clang/cllist_st_data_plot.txt")
-    plot_labels=("6.0.0" "9.0.0")
-    merge_curves plot_data_files plot_labels "Comparison of GCC versions on linked list" "i7_vbox_2/clang_cllist_comparison.png"
-}
 
