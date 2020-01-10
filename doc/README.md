@@ -119,3 +119,5 @@ OS: Raspbian 8 (jessie)
 - [VirtualBox #2 on Intel Core i7](i7_vbox_2/README.md#top)
 - [Raspberry Pi 3](rpi3/README.md#top)
 
+[Measurements](measurements/README.md#top)
+[Comparison](comparison/README.md#top)
