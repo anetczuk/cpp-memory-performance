@@ -116,7 +116,7 @@ single_env_compilers_compare() {
 ## $3 -- compiler
 ## $4 -- title prefix
 ## $5 -- curve labels passed as reference
-envs_compiler_plot_labeled() {
+envs_compiler_plot() {
     local env1=$1
     local env2=$2
     local compiler=$3
@@ -164,24 +164,13 @@ envs_compiler_plot_labeled() {
     merge_curves plot_data_files data_curves_labels "$plot_title" "$out_dir/${data_file}.png"
 }
 
-## $1 -- env 1
-## $2 -- env 2
-## $3 -- compiler
-## $4 -- title prefix
-envs_compiler_plot() {
-    local env1=$1
-    local env2=$2
-    local plot_curves_labels=("$env1" "$env2")
-    envs_compiler_plot_labeled "$env1" "$env2" "$3" "$4" plot_curves_labels
-}
-
 
 ## $1 -- compiler
 ## $2 -- curve labels passed as reference
 vbox_compiler_plot() {
     local compiler=$1
     local -n data_labels=$2
-    envs_compiler_plot_labeled "i7_vbox_1" "i7_vbox_2" "$compiler" "Comparison of vbox1 and vbox2 environments" data_labels
+    envs_compiler_plot "i7_vbox_1" "i7_vbox_2" "$compiler" "Comparison of vbox1 and vbox2 environments" data_labels
 }
 
 
@@ -196,10 +185,11 @@ single_env_compilers_compare i7_vbox_2
 
 
 ## comparison of host vs virtual box #1
-envs_compiler_plot "i7" "i7_vbox_1" gcc          "Comparison of host and Virtual Box"
-envs_compiler_plot "i7" "i7_vbox_1" gcc_unroll   "Comparison of host and Virtual Box"
-envs_compiler_plot "i7" "i7_vbox_1" clang        "Comparison of host and Virtual Box"
-envs_compiler_plot "i7" "i7_vbox_1" clang_unroll "Comparison of host and Virtual Box"
+plot_labels=("i7" "i7 vbox #1")
+envs_compiler_plot "i7" "i7_vbox_1" gcc          "Comparison of host and Virtual Box" plot_labels
+envs_compiler_plot "i7" "i7_vbox_1" gcc_unroll   "Comparison of host and Virtual Box" plot_labels
+envs_compiler_plot "i7" "i7_vbox_1" clang        "Comparison of host and Virtual Box" plot_labels
+envs_compiler_plot "i7" "i7_vbox_1" clang_unroll "Comparison of host and Virtual Box" plot_labels
 
 
 ## comparison of compiler versions on vbox
