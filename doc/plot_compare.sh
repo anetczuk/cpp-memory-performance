@@ -21,7 +21,8 @@ SHOW_PLOT=0
 ## $2 -- curve labels passed as reference
 ## $3 -- plot title
 ## $4 -- plot output file
-merge_curves() {
+## $5 -- use log scale for y axis
+merge_curves_extended() {
     local -n curves_data=$1
         
     if [ -z "$curves_data" ]; then
@@ -32,6 +33,7 @@ merge_curves() {
     local -n curve_labels=$2
     local plot_title=$3
     local plot_png="$4"
+    local log_scale_y="$5"
 
     local plot_string=""      
     plot_string="plot"
@@ -48,7 +50,8 @@ merge_curves() {
     
     gnuplot -p -e '
                     show_plot = "'"${SHOW_PLOT}"'";
-                    set title "'"${plot_title}"'"; 
+                    set title "'"${plot_title}"'";                    
+                    log_scale_y = "'"${log_scale_y}"'";
                     output_png = "'"${plot_png}"'";
                     call "plot_config_head.gnu";
                     '"${plot_string}"'; 
@@ -57,9 +60,19 @@ merge_curves() {
 }
 
 
+## $1 -- curves array passed as reference
+## $2 -- curve labels passed as reference
+## $3 -- plot title
+## $4 -- plot output file
+merge_curves() {
+    merge_curves_extended $1 $2 "$3" "$4" 0
+}
+
+
 ## $1 -- device
 ## $2 -- experiment
 ## $3 -- title
+## $4 -- use log scale for y axis
 compare_compilers_plot() {
     local data_file="$2.txt"
     local plot_data_files=( "$DATA_BASE_DIR/$1/gcc/$data_file" 
@@ -69,27 +82,32 @@ compare_compilers_plot() {
                             )
     local compiler_labels=("gcc" "gcc unroll" "clang" "clang unroll")
     local out_png_dir="$COMPARISON_DIR/$1"
-    local plot_png="$out_png_dir/$2_comparison.png"
+    if [ $4 -eq 1 ]; then
+        local plot_png="$out_png_dir/$2_comparison_log.png"
+    else
+        local plot_png="$out_png_dir/$2_comparison.png"
+    fi
     
     mkdir -p "$out_png_dir"
     
     echo "$1: plotting $3"
-    merge_curves plot_data_files compiler_labels "$3" "$plot_png"
+    merge_curves_extended plot_data_files compiler_labels "$3" "$plot_png" $4
 }
 
 
 ## $1 -- device
 ## $2 -- title
 single_env_compilers_compare() {
-    compare_compilers_plot "$1" array_st_data_plot "Comparison of single-threaded raw array access times"
-    compare_compilers_plot "$1" vector_st_data_plot "Comparison of single-threaded std::vector access times"
-    compare_compilers_plot "$1" cllist_st_data_plot "Comparison of single-threaded linked list access times"
+    compare_compilers_plot "$1" array_st_data_plot "Comparison of single-threaded raw array access times" 0
+    compare_compilers_plot "$1" vector_st_data_plot "Comparison of single-threaded std::vector access times" 0
+    compare_compilers_plot "$1" cllist_st_data_plot "Comparison of single-threaded linked list access times" 0
+    compare_compilers_plot "$1" cllist_st_data_plot "Comparison of single-threaded linked list access times" 1
     
-    compare_compilers_plot "$1" vector_mt_data_plot_average "Comparison of multi-threaded std::vector access times"
-    compare_compilers_plot "$1" cllist_mt_data_plot_average "Comparison of multi-threaded linked list access times"
+    compare_compilers_plot "$1" vector_mt_data_plot_average "Comparison of multi-threaded std::vector access times" 0
+    compare_compilers_plot "$1" cllist_mt_data_plot_average "Comparison of multi-threaded linked list access times" 0
     
-    compare_compilers_plot "$1" vector_mp_data_plot_average "Comparison of multi-processed std::vector access times"
-    compare_compilers_plot "$1" cllist_mp_data_plot_average "Comparison of multi-processed linked list access times"
+    compare_compilers_plot "$1" vector_mp_data_plot_average "Comparison of multi-processed std::vector access times" 0
+    compare_compilers_plot "$1" cllist_mp_data_plot_average "Comparison of multi-processed linked list access times" 0
 }
 
 

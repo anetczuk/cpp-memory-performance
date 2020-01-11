@@ -11,6 +11,9 @@ set key left top
 set format x '%.0f'
 set logscale x 2
 
+if (log_scale_y eq "1") set logscale y 2
+
+
 set xtics ("1KB" 1024, "32KB" 32768, "256KB" 262144, "1MB" 1048576, "9MB" 9437184, "128MB" 134217728, "1GB" 1073741824)
 
 
