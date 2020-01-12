@@ -1,6 +1,17 @@
 ## <a name="top"></a> Comparison
 
 
+### Performance cost of Virtual Box
+
+Performance const can be measured by comparing timing charts of experiments executed on host machine with results of executions experiments on virtualized environments.
+
+![Comparison of single-thread std::vector experiments](i7-i7_vbox_1/clang/vector_st_data_plot.png "Comparison of single-thread std::vector experiments")
+
+![Comparison of single-thread linked list experiments](i7-i7_vbox_1/clang/cllist_st_data_plot.png "Comparison of single-thread linked list experiments")
+
+The graphs shown present performance of std::vector and linked list on single thread under clang. Results of std::vector no performance penalties on both: cache and *RAM*. Situation changes on linked list. Beyond cache size there is increased use of *RAM*, so performance on virtual environment decreases significantly. This observation leads to conclussion that on virtualized environment access to cache is costless, but access to *RAM* is burdened significantly.
+
+
 ### Cache influence on i7
 
 ![i7 performance of single-thread std::vector](i7/vector_st_data_plot_comparison.png "i7 performance of single-thread std::vector")
