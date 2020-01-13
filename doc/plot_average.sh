@@ -33,6 +33,7 @@ plot_data() {
         gnuplot -p -e '
                         show_plot = "'"${SHOW_PLOT}"'";
                         set title "'"${plot_title}"'"; 
+                        log_scale_y = "0";
                         output_png = "'"${plot_png}"'";
                         call "plot_config_head.gnu";
                         plot "'"${curve_data}"'" using 1:2 title "'"${curve_label}"'" with points ls 7,
