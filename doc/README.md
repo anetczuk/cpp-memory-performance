@@ -66,7 +66,7 @@ RAM:
 #### Host environment
 
 Compilers:
-- gcc 7.4.0
+- gcc 7.4.0 (Ubuntu 7.4.0-1ubuntu1~18.04.1)
 - clang 6.0.0
 
 OS: XUbuntu 18.04.3 LTS (Bionic Beaver)
