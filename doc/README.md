@@ -66,8 +66,8 @@ RAM:
 #### Host environment
 
 Compilers:
-- g++ 7.4.0
-- clang++ 6.0.0
+- gcc 7.4.0
+- clang 6.0.0
 
 OS: XUbuntu 18.04.3 LTS (Bionic Beaver)
 
@@ -75,7 +75,7 @@ OS: XUbuntu 18.04.3 LTS (Bionic Beaver)
 #### <a name="vbox1"></a> VirtualBox #1 environment
 
 Hardware, compilers and operating system is the same as for host environment. In addition, following VirtualBox settings has been made:
-- 4 CPUs (4 threads)
+- 12 CPUs (12 threads)
 - execution cap: 100%
 - enabled PAE/NX
 - RAM: 4096MB
