@@ -6,43 +6,11 @@ SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 cd $SCRIPT_DIR
 
-SCRIPT_NAME=$(basename "$0")
-SCRIPT_NAME=${SCRIPT_NAME%.*}
+##SCRIPT_NAME=$(basename "$0")
+##SCRIPT_NAME=${SCRIPT_NAME%.*}
 
 
-SHOW_PLOT=0
-
-
-## $1 -- curve data file
-## $2 -- curve label
-## $3 -- plot title
-## $4 -- plot output file
-plot_data() {
-    local curve_data=$1
-    local curve_label=$2
-    local plot_title=$3
-
-    if [ ! -f "$curve_data" ]; then
-        echo "No data to plot: $curve_data"
-    else
-        local plot_png="$4"
-        echo "Plotting $plot_title"
-
-        ## echo -e "plot subcommand:\n${plot_string}"
-        
-        gnuplot -p -e '
-                        show_plot = "'"${SHOW_PLOT}"'";
-                        set title "'"${plot_title}"'"; 
-                        log_scale_y = "0";
-                        output_png = "'"${plot_png}"'";
-                        call "plot_config_head.gnu";
-                        plot "'"${curve_data}"'" using 1:2 title "'"${curve_label}"'" with points ls 7,
-                             "'"${curve_data}"'" using 1:2 title "bezier smooth" smooth bezier ls 1 lw 2;
-                        call "plot_config_foot.gnu";
-                      '
-    fi
-}
-
+. $SCRIPT_DIR/generate_plot.sh
 
 
 ## $1 -- files list
@@ -88,22 +56,22 @@ calc_data_average() {
     local files_list=$data_dir/vector_mt_data_plot_core_*
     local out_file=$data_dir/vector_mt_data_plot_average.txt
     calc_plot_average "$files_list" "$out_file"
-    plot_data "$out_file" "mem access" "multithreaded std::vector average" "$data_dir/plot_vector_mt_avg.png"
+    plot_curve "$out_file" "mem access" "multithreaded std::vector average" "$data_dir/plot_vector_mt_avg.png"
     
     local files_list=$data_dir/vector_mp_data_plot_proc_*
     local out_file=$data_dir/vector_mp_data_plot_average.txt
     calc_plot_average "$files_list" "$out_file"
-    plot_data "$out_file" "mem access" "multiprocessed std::vector average" "$data_dir/plot_vector_mp_avg.png"
+    plot_curve "$out_file" "mem access" "multiprocessed std::vector average" "$data_dir/plot_vector_mp_avg.png"
     
     local files_list=$data_dir/cllist_mt_data_plot_core_*
     local out_file=$data_dir/cllist_mt_data_plot_average.txt
     calc_plot_average "$files_list" "$out_file"
-    plot_data "$out_file" "mem access" "multithreaded linked list average" "$data_dir/plot_cllist_mt_avg.png"
+    plot_curve "$out_file" "mem access" "multithreaded linked list average" "$data_dir/plot_cllist_mt_avg.png"
     
     local files_list=$data_dir/cllist_mp_data_plot_proc_*
     local out_file=$data_dir/cllist_mp_data_plot_average.txt
     calc_plot_average "$files_list" "$out_file"
-    plot_data "$out_file" "mem access" "multiprocessed linked list average" "$data_dir/plot_cllist_mp_avg.png"
+    plot_curve "$out_file" "mem access" "multiprocessed linked list average" "$data_dir/plot_cllist_mp_avg.png"
 }
 
 
