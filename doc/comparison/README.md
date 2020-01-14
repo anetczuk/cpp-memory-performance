@@ -53,7 +53,7 @@ In case of *gcc* and *clang unroll* there is no difference between cache levels.
 
 ![i7 performance of single-thread linked list](i7/cllist_st_data_plot_comparison_log.png "i7 performance of single-thread linked list")
 
-Results of linked list shows significant benefits of using cache. For small lists (up to 128 KB) performance is simillar to std::vector. Beyond point of 2 MB performance highly depends on *RAM*. 
+Results of linked list shows significant benefits of using cache. For small lists (up to 128 KB) performance is similar to std::vector. Beyond point of 2 MB performance highly depends on *RAM*. 
 
 
 #### Impact on multiple threads and processes
@@ -62,7 +62,7 @@ Results of linked list shows significant benefits of using cache. For small list
 
 ![i7 performance of multi-thread linked list](i7/cllist_mt_data_plot_average_comparison.png "i7 performance of multi-thread linked list")
 
-Shape of presented curves is imillar to curves of single-threaded variants. The difference is in size-values of change points. For std::vector cache improves performance of containers of size up to 1 MB. For linked lists this container size limit is 16 KB.
+Shape of presented curves is similar to curves of single-threaded variants. The difference is in size-values of change points. For std::vector cache affects performance of containers of size up to 1 MB. For linked lists containers up to 2 MB are affected by cache.
 
 
 ### Cache influence on Raspberry Pi
@@ -83,5 +83,5 @@ Results of linked list shows significant benefits of using cache. Beyond cache s
 
 ![Raspberry Pi performance of multi-process linked list](rpi3/cllist_mp_data_plot_average_comparison.png "Raspberry Pi performance of multi-process linked list")
 
-Shape of presented curves is imillar to curves of single-threaded variants. The difference is in size-values of change points. For std::vector cache improves performance of containers of size up to 256 KB. For linked lists this container size limit is 16 KB.
+Shape of presented curves is similar to curves of single-threaded variants. The difference is in size-values of change points. For std::vector cache improves performance of containers of size up to 256 KB. For linked lists containers up to 1 MB are affected by cache.
 

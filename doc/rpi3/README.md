@@ -13,7 +13,7 @@
 ![Raspberry Pi 3 compilers comparison](vector_st_comparison.png "Raspberry Pi 3 compilers comparison")
 
 
-Performance differs in shape of performance of *CPU* cache. Performance of *GCC* is constant and of *CLANG* is parabolic which performs faster when container size grows. In addition *GCC* code is faster. Beyond cache size peroformance is simillar.
+Performance differs in shape of performance of *CPU* cache. Performance of *GCC* is constant and of *CLANG* is parabolic which performs faster when container size grows. In addition *GCC* code is faster. Beyond cache size peroformance is similar.
 
 
 ### multi-processed std::vector

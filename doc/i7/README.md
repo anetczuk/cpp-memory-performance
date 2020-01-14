@@ -21,7 +21,7 @@ In first case performance of *GCC* is constant and of *CLANG* is parabolic which
 
 ### multi-threaded and multi-processed std::vector
 
-Code performance of both compilers up to 1MB containers is simillar. Beyond this size *GCC* performs significantly faster (1.6 ns for 8MB) than *CLANG* (3.0 ns for 8MB).
+Code performance of both compilers up to 1MB containers is similar. Beyond this size *GCC* performs significantly faster (1.6 ns for 8MB) than *CLANG* (3.0 ns for 8MB).
 
 
 ### linked list for single-threaded, multi-threaded and multi-processed version
