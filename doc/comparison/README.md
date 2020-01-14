@@ -16,7 +16,7 @@ The graphs shown present performance of std::vector and linked list on single th
 
 ![Comparison of performance of gcc and clang](i7_vbox_1-i7_vbox_2/gcc-clang/vector_st_data_plot.png "Comparison of performance of gcc and clang")
 
-![Comparison of performance of gcc and clang](i7_vbox_1-i7_vbox_2/gcc-clang/vector_mt_data_plot.png "Comparison of performance of gcc and clang")
+![Comparison of performance of gcc and clang](i7_vbox_1-i7_vbox_2/gcc-clang/vector_mt_data_plot_average.png "Comparison of performance of gcc and clang")
 
 Presented charts shows comparison of gcc and clang performing single-threaded and multi-threaded, std::vector and linked list exercises. The best performance achieves both versions of clang. They performs in similar manner. Then old version of gcc performs significantly slower. Worst performance presents new version of gcc.
 Analyzing linked list experiments leads to similar conclusions. In addition when *RAM* goes into acount (beyond 1MB point) then difference in performance is marginal.
