@@ -7,7 +7,12 @@ set xlabel "Memory size"
 set ylabel "Time per item [ns]"
 set grid
 
+## place legend in left top corner
 set key left top
+
+## align labels to left (default is to right)
+if (legend_key_left eq "1") set key Left
+
 set format x '%.0f'
 set logscale x 2
 

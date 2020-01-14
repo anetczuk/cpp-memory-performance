@@ -4,6 +4,7 @@ set -eu
 
 
 SHOW_PLOT=0
+LEGEND_KEY_LEFT=1
 
 
 ## $1 -- plot title
@@ -19,6 +20,7 @@ generate_plot() {
     gnuplot -p -e '
                     show_plot = "'"${SHOW_PLOT}"'";
                     set title "'"${plot_title}"'";                    
+                    legend_key_left = "'"${LEGEND_KEY_LEFT}"'";
                     log_scale_y = "'"${log_scale_y}"'";
                     output_png = "'"${plot_png}"'";
                     call "plot_config_head.gnu";
