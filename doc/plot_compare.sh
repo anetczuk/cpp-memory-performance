@@ -17,7 +17,7 @@ COMPARISON_DIR=$SCRIPT_DIR/comparison
 SHOW_PLOT=0
 
 
-## $1 -- curves array passed as reference
+## $1 -- data files array passed as reference
 ## $2 -- curve labels passed as reference
 ## $3 -- plot title
 ## $4 -- plot output file
@@ -60,7 +60,7 @@ merge_curves_extended() {
 }
 
 
-## $1 -- curves array passed as reference
+## $1 -- data files array passed as reference
 ## $2 -- curve labels passed as reference
 ## $3 -- plot title
 ## $4 -- plot output file
@@ -142,7 +142,10 @@ compiler_unroll_plot() {
 ## $2 -- env 1
 ## $3 -- env 2
 ## $4 -- curve labels passed as reference
-envs_compiler_plot() {
+##
+## plot order: env1 compiler, env1 compiler unroll, env2 compiler, env2 compiler unroll
+##
+envs_compilers_unroll_plot() {
     local compiler=$1
     local env1="$2"
     local env2="$3"
@@ -184,8 +187,8 @@ envs_compare_compilers_plot() {
     local -n data_curves_labels=$5
     
     local plot_data_files=( "$DATA_BASE_DIR/$env1/gcc/${data_file}.txt"
-                            "$DATA_BASE_DIR/$env1/clang/${data_file}.txt"
                             "$DATA_BASE_DIR/$env2/gcc/${data_file}.txt"
+                            "$DATA_BASE_DIR/$env1/clang/${data_file}.txt"
                             "$DATA_BASE_DIR/$env2/clang/${data_file}.txt"
                            )
                            
@@ -199,6 +202,9 @@ envs_compare_compilers_plot() {
 ## $1 -- env 1
 ## $2 -- env 2
 ## $3 -- curve labels passed as reference
+##
+## plot order: env1 gcc, env2 gcc, env1 clang, env2 clang
+##
 envs_gcc_clang_compare() {
     local env1="$1"
     local env2="$2"
@@ -229,38 +235,48 @@ envs_gcc_clang_compare() {
 }
 
 
-## $1 -- env 1
-## $2 -- env 2
-two_envs_compilers_compare() {
-    local env1="$1"
-    local env2="$2"
-    
-    plot_labels=("gcc 7.4.0" "gcc 7.4.0 unroll" "gcc 9.2.1" "gcc 9.2.1 unroll")
-    envs_compiler_plot "gcc" "$env1" "$env2" plot_labels
-    
-    plot_labels=("clang 6.0.0" "clang 6.0.0 unroll" "clang 9.0.0" "clang 9.0.0 unroll")
-    envs_compiler_plot "clang" "$env1" "$env2" plot_labels
-    
-    ##gcc-clang
-    plot_labels=("gcc 7.4.0" "gcc 9.2.1" "clang 6.0.0" "clang 9.0.0")
-    envs_gcc_clang_compare "$env1" "$env2" plot_labels
-}
-
-
 ## =============================================
 
 
-## comparison of compilers on single device
+#### comparison of compilers on single device
 single_env_compilers_compare i7
 single_env_compilers_compare rpi3
 single_env_compilers_compare i7_vbox_1
 single_env_compilers_compare i7_vbox_2
 
 
-## comparison of host vs virtual box #1
-two_envs_compilers_compare "i7" "i7_vbox_1"
+#### comparison of host vs virtual box #1
+plot_labels=("gcc on host" "gcc on host unroll" "gcc on vbox#1" "gcc on vbox#1 unroll")
+envs_compilers_unroll_plot "gcc" "i7" "i7_vbox_1" plot_labels
+
+plot_labels=("clang on host" "clang on host unroll" "clang on vbox#1" "clang on vbox#1 unroll")
+envs_compilers_unroll_plot "clang" "i7" "i7_vbox_1" plot_labels
+
+## gcc-clang
+plot_labels=("gcc on host" "gcc on vbox#1" "clang on host" "clang on vbox#1")
+envs_gcc_clang_compare "i7" "i7_vbox_1" plot_labels
 
 
-## comparison of compilers and unrolling
-two_envs_compilers_compare "i7_vbox_1" "i7_vbox_2"
+#### comparison of host vs virtual box #2
+plot_labels=("gcc on host" "gcc on host unroll" "gcc on vbox#2" "gcc on vbox#2 unroll")
+envs_compilers_unroll_plot "gcc" "i7" "i7_vbox_2" plot_labels
+
+plot_labels=("clang on host" "clang on host unroll" "clang on vbox#2" "clang on vbox# unroll")
+envs_compilers_unroll_plot "clang" "i7" "i7_vbox_2" plot_labels
+
+## gcc-clang
+plot_labels=("gcc on host" "gcc on vbox#2" "clang on host" "clang on vbox#2")
+envs_gcc_clang_compare "i7" "i7_vbox_2" plot_labels
+
+
+#### comparison of compilers and unrolling
+plot_labels=("gcc 7.4.0" "gcc 7.4.0 unroll" "gcc 9.2.1" "gcc 9.2.1 unroll")
+envs_compilers_unroll_plot "gcc" "i7_vbox_1" "i7_vbox_2" plot_labels
+
+plot_labels=("clang 6.0.0" "clang 6.0.0 unroll" "clang 9.0.0" "clang 9.0.0 unroll")
+envs_compilers_unroll_plot "clang" "i7_vbox_1" "i7_vbox_2" plot_labels
+
+## gcc-clang
+plot_labels=("gcc 7.4.0" "gcc 9.2.1" "clang 6.0.0" "clang 9.0.0")
+envs_gcc_clang_compare "i7_vbox_1" "i7_vbox_2" plot_labels
 

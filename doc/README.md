@@ -86,7 +86,7 @@ Hardware, compilers and operating system is the same as for host environment. In
 #### <a name="vbox2"></a> VirtualBox #2 environment
 
 This is the same environment as *VirtualBox #1*, but with newest compilers:
-- gcc 9.2.1
+- gcc 9.2.1 (Ubuntu 9.2.1-17ubuntu1~18.04.1)
 - clang 9.0.0
 
 
