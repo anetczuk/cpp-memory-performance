@@ -6,6 +6,28 @@ set -eu
 SHOW_PLOT=0
 
 
+## $1 -- plot title
+## $2 -- use log scale for y axis
+## $3 -- plot code string
+## $4 -- plot output file
+generate_plot() {
+    local plot_title="$1"
+    local log_scale_y="$2"
+    local plot_string="$3"
+    local plot_png="$4"
+    
+    gnuplot -p -e '
+                    show_plot = "'"${SHOW_PLOT}"'";
+                    set title "'"${plot_title}"'";                    
+                    log_scale_y = "'"${log_scale_y}"'";
+                    output_png = "'"${plot_png}"'";
+                    call "plot_config_head.gnu";
+                    '"${plot_string}"'; 
+                    call "plot_config_foot.gnu";
+                  '
+}
+
+
 ## $1 -- data files array passed as reference
 ## $2 -- curve labels passed as reference
 ## $3 -- plot title
@@ -36,16 +58,8 @@ merge_curves_extended() {
     done
 
     ## echo -e "plot subcommand:\n${plot_string}"
-    
-    gnuplot -p -e '
-                    show_plot = "'"${SHOW_PLOT}"'";
-                    set title "'"${plot_title}"'";                    
-                    log_scale_y = "'"${log_scale_y}"'";
-                    output_png = "'"${plot_png}"'";
-                    call "plot_config_head.gnu";
-                    '"${plot_string}"'; 
-                    call "plot_config_foot.gnu";
-                  '
+
+    generate_plot "${plot_title}" "${log_scale_y}" "${plot_string}" "${plot_png}"
 }
 
 
@@ -66,16 +80,11 @@ plot_curve() {
 
         ## echo -e "plot subcommand:\n${plot_string}"
         
-        gnuplot -p -e '
-                        show_plot = "'"${SHOW_PLOT}"'";
-                        set title "'"${plot_title}"'"; 
-                        log_scale_y = "0";
-                        output_png = "'"${plot_png}"'";
-                        call "plot_config_head.gnu";
-                        plot "'"${curve_data}"'" using 1:2 title "'"${curve_label}"'" with points ls 7,
-                             "'"${curve_data}"'" using 1:2 title "bezier smooth" smooth bezier ls 1 lw 2;
-                        call "plot_config_foot.gnu";
-                      '
+        local plot_string=""
+        plot_string="$plot_string plot \"${curve_data}\" using 1:2 title \"${curve_label}\" with points ls 7,"
+        plot_string="$plot_string      \"${curve_data}\" using 1:2 title \"bezier smooth\" smooth bezier ls 1 lw 2;"
+        
+        generate_plot "${plot_title}" "0" "${plot_string}" "${plot_png}"
     fi
 }
 
