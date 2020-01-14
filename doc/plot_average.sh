@@ -25,25 +25,26 @@ calc_plot_average() {
         return ;
     fi
 
-    
+
     ## reset output file
     echo "" > $out_file
     
-    ## data columns
+    ## read data from input files and store to output file (overwrite old content)
     for in_file in ${files_list}; do
         ##echo "xxx: $in_file" 
         file_join=$(cut -d " " -f 2 "${in_file}" | paste -d " " "$out_file" -)
         echo "$file_join" > "$out_file"
     done
-    
-    ## calculate average
+        
+    ## calculate average and store to output file (overwrite old content)
     averages=$(awk '{for(i=1;i<=NF;i++) t+=$i; print (t/(i-1)); t=0}' $out_file)
     echo "$averages" > "$out_file"
     
-    ## column #1 -- list size
-    cut -d " " -f 1 "$SCRIPT_DIR/measurements/i7/gcc/vector_mt_data_plot_core_1.txt" > "$out_file"
-    
-    ## join averages
+    ## write column #1 -- list size (overwrite old content)
+    first_file=($(ls -v ${files_list}))
+    cut -d " " -f 1 "$first_file" > "$out_file"
+
+    ## join averages (add columns)
     file_join=$(echo "$averages" | paste -d " " "$out_file" -)
     echo "$file_join" > "$out_file"
 }
