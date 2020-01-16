@@ -79,7 +79,7 @@ compiler_unroll_plot() {
                             "$DATA_BASE_DIR/$env2/${compiler}_unroll/${data_file}.txt"
                            )
                            
-    local out_dir="$COMPARISON_DIR/$env1-$env2/$compiler"
+    local out_dir="$COMPARISON_DIR/$env1-$env2/$compiler-${compiler}_unroll"
     mkdir -p "$out_dir"
     
     merge_curves plot_data_files data_curves_labels "$plot_title" "$out_dir/${data_file}.png"
