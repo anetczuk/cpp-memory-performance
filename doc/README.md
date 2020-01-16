@@ -31,13 +31,14 @@ Time measurements are done using *std::chrono* high resolution clock.
 
 
 
-## <a name="devices"></a> Enironments under benchmark
+## <a name="environments"></a> Environments under benchmark
 
 Experiments were executed on following units: 
 - *Intel Core i7*
-- virtual machine #1 on *i7*
-- virtual machine #2 on *i7*
+- virtual machine #1 on *i7* host
+- virtual machine #2 on *i7* host
 - *Raspbery Pi 3*
+
 and for two compilers: gcc and clang.
 
 To receive detailed info about CPU run: ```lscpu```
@@ -105,19 +106,16 @@ RAM:
 - size: 1 GB (shared by the GPU and CPU)
 
 Compilers:
-- g++ 4.9.2
-- clang++ 3.5.0
+- gcc 4.9.2
+- clang 3.5.0
 
 OS: Raspbian 8 (jessie)
 
 
 
-## <a name="results"></a> Results per environment
+## <a name="results"></a> Results
 
-- [Host Intel Core i7](i7/README.md#top)
-- [VirtualBox #1 on Intel Core i7](i7_vbox_1/README.md#top)
-- [VirtualBox #2 on Intel Core i7](i7_vbox_2/README.md#top)
-- [Raspberry Pi 3](rpi3/README.md#top)
+Time results of executed experiments: [measurements](measurements/README.md#top)
 
-[Measurements](measurements/README.md#top)
-[Comparison](comparison/README.md#top)
+Comparison of measurements between environments: [comparison](comparison/README.md#top)
+
