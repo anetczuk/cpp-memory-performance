@@ -90,22 +90,6 @@ compare_compilers_plot() {
 }
 
 
-## $1 -- env
-## $2 -- title
-single_env_compilers_compare() {
-    compare_compilers_plot "$1" array_st_data_plot "Comparison of single-threaded raw array access times" 0
-    compare_compilers_plot "$1" vector_st_data_plot "Comparison of single-threaded std::vector access times" 0
-    compare_compilers_plot "$1" cllist_st_data_plot "Comparison of single-threaded linked list access times" 0
-    compare_compilers_plot "$1" cllist_st_data_plot "Comparison of single-threaded linked list access times" 1
-    
-    compare_compilers_plot "$1" vector_mt_data_plot_average "Comparison of multi-threaded std::vector access times" 0
-    compare_compilers_plot "$1" cllist_mt_data_plot_average "Comparison of multi-threaded linked list access times" 0
-    
-    compare_compilers_plot "$1" vector_mp_data_plot_average "Comparison of multi-processed std::vector access times" 0
-    compare_compilers_plot "$1" cllist_mp_data_plot_average "Comparison of multi-processed linked list access times" 0
-}
-
-
 ## $1 -- compiler
 ## $2 -- env 1
 ## $3 -- env 2
@@ -123,6 +107,22 @@ compiler_unroll_plot() {
     local out_dir="$COMPARISON_DIR/$env1-$env2/$compiler-${compiler}_unroll"
     
     compare_unroll_results_4 "$env1/${compiler}" "$env2/${compiler}" "$out_dir" "$data_file" "$plot_title" data_curves_labels 0
+}
+
+
+## $1 -- env
+## $2 -- title
+single_env_compilers_compare() {
+    compare_compilers_plot "$1" array_st_data_plot "Comparison of single-threaded raw array access times" 0
+    compare_compilers_plot "$1" vector_st_data_plot "Comparison of single-threaded std::vector access times" 0
+    compare_compilers_plot "$1" cllist_st_data_plot "Comparison of single-threaded linked list access times" 0
+    compare_compilers_plot "$1" cllist_st_data_plot "Comparison of single-threaded linked list access times" 1
+    
+    compare_compilers_plot "$1" vector_mt_data_plot_average "Comparison of multi-threaded std::vector access times" 0
+    compare_compilers_plot "$1" cllist_mt_data_plot_average "Comparison of multi-threaded linked list access times" 0
+    
+    compare_compilers_plot "$1" vector_mp_data_plot_average "Comparison of multi-processed std::vector access times" 0
+    compare_compilers_plot "$1" cllist_mp_data_plot_average "Comparison of multi-processed linked list access times" 0
 }
 
 
@@ -200,12 +200,12 @@ envs_gcc_clang_compare() {
 
 ## $1 -- config 1
 ## $2 -- config 2
-## $3 -- output dir
+## $3 -- output subdir
 ## $4 -- curve labels passed as reference
 config_compare_compilers_plot() {
     local config1="$1"
     local config2="$2"
-    local out_dir="$3"
+    local out_dir="$COMPARISON_DIR/$3"
     local -n data_plot_labels=$4
     
     compare_unroll_results_4 "$config1" "$config2" "$out_dir" array_st_data_plot "Comparison of single-threaded raw array access times" data_plot_labels 0
@@ -270,7 +270,7 @@ envs_gcc_clang_compare "i7_vbox_1" "i7_vbox_2" plot_labels
 
 #### comparison of selected compilers
 compiler_labels=("gcc 7.4.0" "gcc 7.4.0 unroll" "clang 9.0.0" "clang 9.0.0 unroll")
-config_compare_compilers_plot "i7_vbox_1/gcc" "i7_vbox_2/clang" "$COMPARISON_DIR/gcc7-clang9" compiler_labels
+config_compare_compilers_plot "i7_vbox_1/gcc" "i7_vbox_2/clang" "gcc7-clang9" compiler_labels
 
 compiler_labels=("gcc 9.2.1" "gcc 9.2.1 unroll" "clang 6.0.0" "clang 6.0.0 unroll")
-config_compare_compilers_plot "i7_vbox_2/gcc" "i7_vbox_1/clang" "$COMPARISON_DIR/gcc9-clang7" compiler_labels
+config_compare_compilers_plot "i7_vbox_2/gcc" "i7_vbox_1/clang" "gcc9-clang7" compiler_labels
